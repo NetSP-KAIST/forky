@@ -1,4 +1,4 @@
-# bitcoin-consensus-fuzz
+# forky-bitcoin
 Fuzzing Bitcoin Core to check consensus inconsistency caused by version update using differential fuzzing.
 
 ## Install Docker

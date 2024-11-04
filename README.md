@@ -1,10 +1,16 @@
-# Fork State-Aware Differential Fuzzing for Blockchain Consensus Implementations
-## Forky Proof-of-Concept Implementation
-Repo for anonymous submission and artifact evaluation
+# Forky
+This is the GitHub repository for ICSE'25 paper: 
 
-**Open only in the review period** (to be reopened as a public with identity after review).
+> *Fork State-Aware Differential Fuzzing for Blockchain Consensus Implementations*
 
-**(Warning)** Current PoC implementation utilizes a large amount of disk I/O that can impact SSD lifespan.
+Forky is a fork state-aware differential fuzzing framework designed to detect implementation discrepancies within the critical fork-handling process. 
+We test Forky on the two most influential blockchain projects: *Bitcoin* and *Ethereum*, which are the representatives of the two major blockchain consensus algorithm families, Proof-of-Work (PoW) and Proof-of-Stake (PoS) consensus algorithms.
+
+> [!NOTE]
+> The current version is Proof-of-Concept implementation, so not optimized yet.
+
+> [!WARNING]
+> Current PoC implementation utilizes a large amount of disk I/O that can impact SSD lifespan.
 
 ### Forky Bitcoin
 (**forky-bitcoin**) Differential testing Bitcoin fork resolution implementation with Forky
@@ -17,3 +23,15 @@ Repo for anonymous submission and artifact evaluation
 ### Forky Ethereum 2.0 (PoS)
 (**forky-eth2**) Differential testing Ethereum 2.0 fork resolution implementation with Forky
 * Target client: Prysm (Go), Lighthouse (Rust), Teku (Java), Nimbus (Nim)
+
+---
+### Citation
+```
+@inproceedings{kim2025fork,
+  title = {Fork State-Aware Differential Fuzzing for Blockchain Consensus Implementations},
+  author = {Wonhoi Kim and Hocheol Nam and Muoi Tran and Amin Jalilov and Zhenkai Liang and Sang Kil Cha and Min Suk Kang},
+  booktitle = {Proceedings of the 47th IEEE/ACM International Conference on Software Engineering (ICSE'25)},
+  year = {2025},
+  location = {Ottawa, Ontario, Canada},
+}
+```

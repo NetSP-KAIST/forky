@@ -1,0 +1,21 @@
+dependencies {
+  api project(':infrastructure:json')
+
+  implementation project(':infrastructure:bytes')
+  implementation project(':infrastructure:crypto')
+
+  implementation 'com.fasterxml.jackson.core:jackson-databind'
+
+  implementation 'it.unimi.dsi:fastutil'
+  implementation 'org.apache.commons:commons-lang3'
+  implementation 'org.apache.tuweni:tuweni-units'
+
+  testImplementation testFixtures(project(':infrastructure:collections'))
+  testImplementation testFixtures(project(':infrastructure:serviceutils'))
+
+  testFixturesApi 'org.apache.tuweni:tuweni-bytes'
+  testFixturesApi 'org.apache.tuweni:tuweni-units'
+  testFixturesApi project(':infrastructure:unsigned')
+  testFixturesImplementation project(':infrastructure:bytes')
+  testFixturesImplementation 'it.unimi.dsi:fastutil'
+}

@@ -1,0 +1,14 @@
+version: '3.0'
+services: 
+  v23.0: 
+    container_name: v23.0-fuzz
+    image: ubuntu-bitcoin:v23.0
+    working_dir: /bitcoin
+    privileged: true
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/fuzz_v22.sh && /script/fuzz_v22.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ../../fuzzing_corpus:/bitcoin/fuzzing_corpus
+      - ./test_cases:/bitcoin/test_cases

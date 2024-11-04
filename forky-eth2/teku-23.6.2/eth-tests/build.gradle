@@ -1,0 +1,17 @@
+dependencies {
+  implementation project(':ethereum:statetransition')
+  implementation project(':ethereum:spec')
+  implementation testFixtures(project(':ethereum:spec'))
+  implementation project(':ethereum:networks')
+  implementation project(':infrastructure:async')
+  implementation project(':infrastructure:bls')
+  implementation project(':infrastructure:ssz')
+  implementation project(':storage')
+
+  implementation 'com.fasterxml.jackson.core:jackson-databind'
+  implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
+  implementation 'org.apache.commons:commons-text'
+  implementation 'org.apache.tuweni:tuweni-bytes'
+  implementation 'org.apache.tuweni:tuweni-units'
+  implementation 'org.junit.jupiter:junit-jupiter-params'
+}

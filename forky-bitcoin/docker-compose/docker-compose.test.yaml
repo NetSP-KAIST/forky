@@ -1,0 +1,383 @@
+version: '3.0'
+services: 
+  v27.1: 
+    container_name: v27.1-test
+    image: ubuntu-bitcoin:v27.1
+    working_dir: /bitcoin
+    privileged: true
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/test_v22.sh && /script/test_v22.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ./results/bitcoin:/bitcoin/results
+      - ./test_cases:/bitcoin/test_cases
+  v26.0: 
+    container_name: v26.0-test
+    image: ubuntu-bitcoin:v26.0
+    working_dir: /bitcoin
+    privileged: true
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/test_v22.sh && /script/test_v22.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ./results/bitcoin:/bitcoin/results
+      - ./test_cases:/bitcoin/test_cases
+  v25.0: 
+    container_name: v25.0-test
+    image: ubuntu-bitcoin:v25.0
+    working_dir: /bitcoin
+    privileged: true
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/test_v22.sh && /script/test_v22.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ./results/bitcoin:/bitcoin/results
+      - ./test_cases:/bitcoin/test_cases
+  v24.1: 
+    container_name: v24.1-test
+    image: ubuntu-bitcoin:v24.1
+    working_dir: /bitcoin
+    privileged: true
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/test_v22.sh && /script/test_v22.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ./results/bitcoin:/bitcoin/results
+      - ./test_cases:/bitcoin/test_cases
+  v23.0: 
+    container_name: v23.0-test
+    image: ubuntu-bitcoin:v23.0
+    working_dir: /bitcoin
+    privileged: true
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/test_v22.sh && /script/test_v22.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ./results/bitcoin:/bitcoin/results
+      - ./test_cases:/bitcoin/test_cases
+  v22.0: 
+    container_name: v22.0-test
+    image: ubuntu-bitcoin:v22.0
+    working_dir: /bitcoin
+    privileged: true
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/test_v22.sh && /script/test_v22.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ./results/bitcoin:/bitcoin/results
+      - ./test_cases:/bitcoin/test_cases
+  v0.21.2: 
+    container_name: v0.21.2-test
+    image: ubuntu-bitcoin:v0.21.2
+    working_dir: /bitcoin
+    privileged: true
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/test.sh && /script/test.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ./results/bitcoin:/bitcoin/results
+      - ./test_cases:/bitcoin/test_cases
+  v0.21.1: 
+    container_name: v0.21.1-test
+    image: ubuntu-bitcoin:v0.21.1
+    working_dir: /bitcoin
+    privileged: true
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/test.sh && /script/test.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ./results/bitcoin:/bitcoin/results
+      - ./test_cases:/bitcoin/test_cases
+  v0.21.0: 
+    container_name: v0.21.0-test
+    image: ubuntu-bitcoin:v0.21.0
+    working_dir: /bitcoin
+    privileged: true
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/test.sh && /script/test.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ./results/bitcoin:/bitcoin/results
+      - ./test_cases:/bitcoin/test_cases
+  v0.20.1:
+    container_name: v0.20.1-test
+    image: ubuntu-bitcoin:v0.20.1
+    working_dir: /bitcoin
+    privileged: true
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/test.sh && /script/test.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ./results/bitcoin:/bitcoin/results
+      - ./test_cases:/bitcoin/test_cases
+  v0.20.0:
+    container_name: v0.20.0-test
+    image: ubuntu-bitcoin:v0.20.0
+    working_dir: /bitcoin
+    privileged: true
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/test.sh && /script/test.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ./results/bitcoin:/bitcoin/results
+      - ./test_cases:/bitcoin/test_cases
+  v0.19.1:
+    container_name: v0.19.1-test
+    image: ubuntu-bitcoin:v0.19.1
+    working_dir: /bitcoin
+    privileged: true
+    command: sh -c "chmod +x /script/test.sh && /script/test.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ./results/bitcoin:/bitcoin/results
+      - ./test_cases:/bitcoin/test_cases
+  v0.19.0.1:
+    container_name: v0.19.0.1-test
+    image: ubuntu-bitcoin:v0.19.0.1
+    working_dir: /bitcoin
+    privileged: true
+    command: sh -c "chmod +x /script/test.sh && /script/test.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ./results/bitcoin:/bitcoin/results
+      - ./test_cases:/bitcoin/test_cases
+  v0.19.0:
+    container_name: v0.19.0-test
+    image: ubuntu-bitcoin:v0.19.0
+    working_dir: /bitcoin
+    privileged: true
+    command: sh -c "chmod +x /script/test.sh && /script/test.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ./results/bitcoin:/bitcoin/results
+      - ./test_cases:/bitcoin/test_cases
+  v0.18.1:
+    container_name: v0.18.1-test
+    image: ubuntu-bitcoin:v0.18.1
+    working_dir: /bitcoin
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/test.sh && /script/test.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ./results/bitcoin:/bitcoin/results
+      - ./test_cases:/bitcoin/test_cases
+  v0.18.0:
+    container_name: v0.18.0-test
+    image: ubuntu-bitcoin:v0.18.0
+    working_dir: /bitcoin
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/test.sh && /script/test.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ./results/bitcoin:/bitcoin/results
+      - ./test_cases:/bitcoin/test_cases
+  v0.17.1:
+    container_name: v0.17.1-test
+    image: ubuntu-bitcoin:v0.17.1
+    working_dir: /bitcoin
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/test.sh && /script/test.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ./results/bitcoin:/bitcoin/results
+      - ./test_cases:/bitcoin/test_cases
+  # v0.17.0.1:
+  #   container_name: v0.17.0.1-test
+  #   image: ubuntu-bitcoin:v0.17.0.1
+  #   working_dir: /bitcoin
+  #   #command: tail -f /dev/null
+  #   command: sh -c "chmod +x /script/test.sh && /script/test.sh"
+  #   volumes:
+  #     - ../../script:/script
+  #     - ../../import:/bitcoin/import
+  #     - ./results/bitcoin:/bitcoin/results
+  #     - ./test_cases:/bitcoin/test_cases
+  v0.17.0:
+    container_name: v0.17.0-test
+    image: ubuntu-bitcoin:v0.17.0
+    working_dir: /bitcoin
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/test.sh && /script/test.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ./results/bitcoin:/bitcoin/results
+      - ./test_cases:/bitcoin/test_cases
+  v0.16.3:
+    container_name: v0.16.3-test
+    image: ubuntu-bitcoin:v0.16.3
+    working_dir: /bitcoin
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/test.sh && /script/test.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ./results/bitcoin:/bitcoin/results
+      - ./test_cases:/bitcoin/test_cases
+  v0.16.2:
+    container_name: v0.16.2-test
+    image: ubuntu-bitcoin:v0.16.2
+    working_dir: /bitcoin
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/test.sh && /script/test.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ./results/bitcoin:/bitcoin/results
+      - ./test_cases:/bitcoin/test_cases
+  v0.16.1:
+    container_name: v0.16.1-test
+    image: ubuntu-bitcoin:v0.16.1
+    working_dir: /bitcoin
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/test.sh && /script/test.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ./results/bitcoin:/bitcoin/results
+      - ./test_cases:/bitcoin/test_cases
+  v0.16.0:
+    container_name: v0.16.0-test
+    image: ubuntu-bitcoin:v0.16.0
+    working_dir: /bitcoin
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/test.sh && /script/test.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ./results/bitcoin:/bitcoin/results
+      - ./test_cases:/bitcoin/test_cases
+  v0.15.2:
+    container_name: v0.15.2-test
+    image: ubuntu-bitcoin:v0.15.2
+    working_dir: /bitcoin
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/test.sh && /script/test.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ./results/bitcoin:/bitcoin/results
+      - ./test_cases:/bitcoin/test_cases
+  v0.15.1:
+    container_name: v0.15.1-test
+    image: ubuntu-bitcoin:v0.15.1
+    working_dir: /bitcoin
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/test.sh && /script/test.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ./results/bitcoin:/bitcoin/results
+      - ./test_cases:/bitcoin/test_cases
+  v0.15.0:
+    container_name: v0.15.0-test
+    image: ubuntu-bitcoin:v0.15.0
+    working_dir: /bitcoin
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/test.sh && /script/test.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ./results/bitcoin:/bitcoin/results
+      - ./test_cases:/bitcoin/test_cases
+  v23.0-knots: 
+    container_name: v23.0-knots-test
+    image: ubuntu-bitcoin:v23.0-knots
+    working_dir: /bitcoin
+    privileged: true
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/test_v22.sh && /script/test_v22.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ./results/knots:/bitcoin/results
+      - ./test_cases:/bitcoin/test_cases
+  v22.0-knots: 
+    container_name: v22.0-knots-test
+    image: ubuntu-bitcoin:v22.0-knots
+    working_dir: /bitcoin
+    privileged: true
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/test_v22.sh && /script/test_v22.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ./results/knots:/bitcoin/results
+      - ./test_cases:/bitcoin/test_cases
+  btcd-v0.23.1:
+    container_name: btcd-v0.23.1-test
+    image: ubuntu-btcd:v0.23.1
+    working_dir: /btcd-0.23.1
+    privileged: true
+    command: sh -c "chmod +x /btcd-0.23.1/main.go && go run /btcd-0.23.1/main.go"
+    volumes:
+      - ../../import:/btcd-0.23.1/import
+      - ./results/btcd/0.23.1:/btcd-0.23.1/output
+      - ./test_cases:/btcd-0.23.1/test_cases
+  btcd-v0.23.0:
+    container_name: btcd-v0.23.0-test
+    image: ubuntu-btcd:v0.23.0
+    working_dir: /btcd-0.23.0
+    privileged: true
+    command: sh -c "chmod +x /btcd-0.23.0/main.go && go run /btcd-0.23.0/main.go"
+    volumes:
+      - ../../import:/btcd-0.23.0/import
+      - ./results/btcd/0.23.0:/btcd-0.23.0/output
+      - ./test_cases:/btcd-0.23.0/test_cases
+  btcd-v0.22.1:
+    container_name: btcd-v0.22.1-test
+    image: ubuntu-btcd:v0.22.1
+    working_dir: /btcd-0.22.1
+    privileged: true
+    command: sh -c "chmod +x /btcd-0.22.1/main.go && go run /btcd-0.22.1/main.go"
+    volumes:
+      - ../../import:/btcd-0.22.1/import
+      - ./results/btcd/0.22.1:/btcd-0.22.1/output
+      - ./test_cases:/btcd-0.22.1/test_cases
+  bcoin-v2.2.0:
+    container_name: bcoin-v2.2.0-test
+    image: ubuntu-bcoin:v2.2.0
+    working_dir: /fuzz
+    privileged: true
+    command: sh -c "chmod +x /fuzz/main.js && node /fuzz/main.js"
+    volumes:
+      - ../../import:/fuzz/import
+      - ./results/bcoin/2.2.0:/fuzz/output
+      - ./test_cases:/fuzz/test_cases
+  bcoin-v2.1.0:
+    container_name: bcoin-v2.1.0-test
+    image: ubuntu-bcoin:v2.1.0
+    working_dir: /fuzz
+    privileged: true
+    command: sh -c "chmod +x /fuzz/main.js && node /fuzz/main.js"
+    volumes:
+      - ../../import:/fuzz/import
+      - ./results/bcoin/2.1.0:/fuzz/output
+      - ./test_cases:/fuzz/test_cases
+  bcoin-v2.0.0:
+    container_name: bcoin-v2.0.0-test
+    image: ubuntu-bcoin:v2.0.0
+    working_dir: /fuzz
+    privileged: true
+    command: sh -c "chmod +x /fuzz/main.js && node /fuzz/main.js"
+    volumes:
+      - ../../import:/fuzz/import
+      - ./results/bcoin/2.0.0:/fuzz/output
+      - ./test_cases:/fuzz/test_cases

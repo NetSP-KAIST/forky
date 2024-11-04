@@ -1,0 +1,3 @@
+0000000000000000000000000000000000000000 c22962f3821d069f86ee38826443f9830931cc7c forky-anonymized <forky.blockchain@gmail.com> 1686031033 +0900	clone: from https://github.com/status-im/nimbus-eth2.git
+c22962f3821d069f86ee38826443f9830931cc7c 4842c9d1786d155b511714acdf85933cda919bfb forky-anonymized <forky.blockchain@gmail.com> 1686031056 +0900	checkout: moving from stable to v23.5.1
+4842c9d1786d155b511714acdf85933cda919bfb c22962f3821d069f86ee38826443f9830931cc7c forky-anonymized <forky.blockchain@gmail.com> 1686031096 +0900	checkout: moving from 4842c9d1786d155b511714acdf85933cda919bfb to stable

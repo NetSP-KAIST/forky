@@ -1,0 +1,326 @@
+version: '3.0'
+services: 
+  v27.1: 
+    container_name: v27.1-fuzz
+    image: ubuntu-bitcoin:v27.1
+    working_dir: /bitcoin
+    privileged: true
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/fuzz_v22.sh && /script/fuzz_v22.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ../../fuzzing_corpus:/bitcoin/fuzzing_corpus
+      - ./test_cases:/bitcoin/test_cases
+  v26.0: 
+    container_name: v26.0-fuzz
+    image: ubuntu-bitcoin:v26.0
+    working_dir: /bitcoin
+    privileged: true
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/fuzz_v22.sh && /script/fuzz_v22.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ../../fuzzing_corpus:/bitcoin/fuzzing_corpus
+      - ./test_cases:/bitcoin/test_cases
+  v25.0: 
+    container_name: v25.0-fuzz
+    image: ubuntu-bitcoin:v25.0
+    working_dir: /bitcoin
+    privileged: true
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/fuzz_v22.sh && /script/fuzz_v22.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ../../fuzzing_corpus:/bitcoin/fuzzing_corpus
+      - ./test_cases:/bitcoin/test_cases
+  v24.1: 
+    container_name: v24.1-fuzz
+    image: ubuntu-bitcoin:v24.1
+    working_dir: /bitcoin
+    privileged: true
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/fuzz_v22.sh && /script/fuzz_v22.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ../../fuzzing_corpus:/bitcoin/fuzzing_corpus
+      - ./test_cases:/bitcoin/test_cases
+  v23.0: 
+    container_name: v23.0-fuzz
+    image: ubuntu-bitcoin:v23.0
+    working_dir: /bitcoin
+    privileged: true
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/fuzz_v22.sh && /script/fuzz_v22.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ../../fuzzing_corpus:/bitcoin/fuzzing_corpus
+      - ./test_cases:/bitcoin/test_cases
+  v22.0: 
+    container_name: v22.0-fuzz
+    image: ubuntu-bitcoin:v22.0
+    working_dir: /bitcoin
+    privileged: true
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/fuzz_v22.sh && /script/fuzz_v22.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ../../fuzzing_corpus:/bitcoin/fuzzing_corpus
+      - ./test_cases:/bitcoin/test_cases
+  v0.21.2: 
+    container_name: v0.21.2-fuzz
+    image: ubuntu-bitcoin:v0.21.2
+    working_dir: /bitcoin
+    privileged: true
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/fuzz.sh && /script/fuzz.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ../../fuzzing_corpus:/bitcoin/fuzzing_corpus
+      - ./test_cases:/bitcoin/test_cases
+  v0.21.1: 
+    container_name: v0.21.1-fuzz
+    image: ubuntu-bitcoin:v0.21.1
+    working_dir: /bitcoin
+    privileged: true
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/fuzz.sh && /script/fuzz.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ../../fuzzing_corpus:/bitcoin/fuzzing_corpus
+      - ./test_cases:/bitcoin/test_cases
+  v0.21.0: 
+    container_name: v0.21.0-fuzz
+    image: ubuntu-bitcoin:v0.21.0
+    working_dir: /bitcoin
+    privileged: true
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/fuzz.sh && /script/fuzz.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ../../fuzzing_corpus:/bitcoin/fuzzing_corpus
+      - ./test_cases:/bitcoin/test_cases
+  v0.20.1:
+    container_name: v0.20.1-fuzz
+    image: ubuntu-bitcoin:v0.20.1
+    working_dir: /bitcoin
+    privileged: true
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/fuzz.sh && /script/fuzz.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ../../fuzzing_corpus:/bitcoin/fuzzing_corpus
+      - ./test_cases:/bitcoin/test_cases
+  v0.20.0:
+    container_name: v0.20.0-fuzz
+    image: ubuntu-bitcoin:v0.20.0
+    working_dir: /bitcoin
+    privileged: true
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/fuzz.sh && /script/fuzz.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ../../fuzzing_corpus:/bitcoin/fuzzing_corpus
+      - ./test_cases:/bitcoin/test_cases
+  v0.19.1: 
+    container_name: v0.19.1-fuzz
+    image: ubuntu-bitcoin:v0.19.1
+    working_dir: /bitcoin
+    privileged: true
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/fuzz.sh && /script/fuzz.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ../../fuzzing_corpus:/bitcoin/fuzzing_corpus
+      - ./test_cases:/bitcoin/test_cases
+  v0.19.0.1: 
+    container_name: v0.19.0.1-fuzz
+    image: ubuntu-bitcoin:v0.19.0.1
+    working_dir: /bitcoin
+    privileged: true
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/fuzz.sh && /script/fuzz.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ../../fuzzing_corpus:/bitcoin/fuzzing_corpus
+      - ./test_cases:/bitcoin/test_cases
+  v0.19.0: 
+    container_name: v0.19.0-fuzz
+    image: ubuntu-bitcoin:v0.19.0
+    working_dir: /bitcoin
+    privileged: true
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/fuzz.sh && /script/fuzz.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ../../fuzzing_corpus:/bitcoin/fuzzing_corpus
+      - ./test_cases:/bitcoin/test_cases
+  v0.18.1:
+    container_name: v0.18.1-fuzz
+    image: ubuntu-bitcoin:v0.18.1
+    working_dir: /bitcoin
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/fuzz.sh && /script/fuzz.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ../../fuzzing_corpus:/bitcoin/fuzzing_corpus
+      - ./test_cases:/bitcoin/test_cases
+  v0.18.0:
+    container_name: v0.18.0-fuzz
+    image: ubuntu-bitcoin:v0.18.0
+    working_dir: /bitcoin
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/fuzz.sh && /script/fuzz.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ../../fuzzing_corpus:/bitcoin/fuzzing_corpus
+      - ./test_cases:/bitcoin/test_cases
+  v0.17.1:
+    container_name: v0.17.1-fuzz
+    image: ubuntu-bitcoin:v0.17.1
+    working_dir: /bitcoin
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/fuzz.sh && /script/fuzz.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ../../fuzzing_corpus:/bitcoin/fuzzing_corpus
+      - ./test_cases:/bitcoin/test_cases
+  v0.17.0.1:
+    container_name: v0.17.0.1-fuzz
+    image: ubuntu-bitcoin:v0.17.0.1
+    working_dir: /bitcoin
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/fuzz.sh && /script/fuzz.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ../../fuzzing_corpus:/bitcoin/fuzzing_corpus
+      - ./test_cases:/bitcoin/test_cases
+  v0.17.0:
+    container_name: v0.17.0-fuzz
+    image: ubuntu-bitcoin:v0.17.0
+    working_dir: /bitcoin
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/fuzz.sh && /script/fuzz.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ../../fuzzing_corpus:/bitcoin/fuzzing_corpus
+      - ./test_cases:/bitcoin/test_cases
+  v0.16.3:
+    container_name: v0.16.3-fuzz
+    image: ubuntu-bitcoin:v0.16.3
+    working_dir: /bitcoin
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/fuzz.sh && /script/fuzz.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ../../fuzzing_corpus:/bitcoin/fuzzing_corpus
+      - ./test_cases:/bitcoin/test_cases
+  v0.16.2:
+    container_name: v0.16.2-fuzz
+    image: ubuntu-bitcoin:v0.16.2
+    working_dir: /bitcoin
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/fuzz.sh && /script/fuzz.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ../../fuzzing_corpus:/bitcoin/fuzzing_corpus
+      - ./test_cases:/bitcoin/test_cases
+  v0.16.1:
+    container_name: v0.16.1-fuzz
+    image: ubuntu-bitcoin:v0.16.1
+    working_dir: /bitcoin
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/fuzz.sh && /script/fuzz.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ../../fuzzing_corpus:/bitcoin/fuzzing_corpus
+      - ./test_cases:/bitcoin/test_cases
+  v0.16.0:
+    container_name: v0.16.0-fuzz
+    image: ubuntu-bitcoin:v0.16.0
+    working_dir: /bitcoin
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/fuzz.sh && /script/fuzz.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ../../fuzzing_corpus:/bitcoin/fuzzing_corpus
+      - ./test_cases:/bitcoin/test_cases
+  v0.15.2:
+    container_name: v0.15.2-fuzz
+    image: ubuntu-bitcoin:v0.15.2
+    working_dir: /bitcoin
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/fuzz.sh && /script/fuzz.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ../../fuzzing_corpus:/bitcoin/fuzzing_corpus
+      - ./test_cases:/bitcoin/test_cases
+  v0.15.1:
+    container_name: v0.15.1-fuzz
+    image: ubuntu-bitcoin:v0.15.1
+    working_dir: /bitcoin
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/fuzz.sh && /script/fuzz.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ../../fuzzing_corpus:/bitcoin/fuzzing_corpus
+      - ./test_cases:/bitcoin/test_cases
+  v0.15.0:
+    container_name: v0.15.0-fuzz
+    image: ubuntu-bitcoin:v0.15.0
+    working_dir: /bitcoin
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/fuzz.sh && /script/fuzz.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ../../fuzzing_corpus:/bitcoin/fuzzing_corpus
+      - ./test_cases:/bitcoin/test_cases
+  v23.0-knots: 
+    container_name: v23.0-knots-fuzz
+    image: ubuntu-bitcoin:v23.0-knots
+    working_dir: /bitcoin
+    privileged: true
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/fuzz_v22.sh && /script/fuzz_v22.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ../../fuzzing_corpus:/bitcoin/fuzzing_corpus
+      - ./test_cases:/bitcoin/test_cases
+  v22.0-knots: 
+    container_name: v22.0-knots-fuzz
+    image: ubuntu-bitcoin:v22.0-knots
+    working_dir: /bitcoin
+    privileged: true
+    #command: tail -f /dev/null
+    command: sh -c "chmod +x /script/fuzz_v22.sh && /script/fuzz_v22.sh"
+    volumes:
+      - ../../script:/script
+      - ../../import:/bitcoin/import
+      - ../../fuzzing_corpus:/bitcoin/fuzzing_corpus
+      - ./test_cases:/bitcoin/test_cases

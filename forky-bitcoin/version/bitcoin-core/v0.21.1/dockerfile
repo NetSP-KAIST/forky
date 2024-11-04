@@ -1,0 +1,46 @@
+FROM ubuntu-bitcoin:base
+LABEL email="forky.blockchain.anonymized.for.submission@gmail.com"
+LABEL description="Docker environment for Bitcoin v0.21.1"
+# get bitcoin client
+COPY block.cpp /code/block.cpp
+COPY coins.h /code/coins.h
+COPY chain.h /code/chain.h
+COPY txmempool.h /code/txmempool.h
+COPY validation.cpp /code/validataion.cpp
+COPY validation.h /code/validataion.h
+COPY Makefile.test.include /code/Makefile.test.include 
+COPY validationinterface.cpp /code/validationinterface.cpp
+COPY time.cpp /code/time.cpp
+RUN curl -LO https://bitcoincore.org/bin/bitcoin-core-0.21.1/bitcoin-0.21.1.tar.gz \
+ && tar -zxvf bitcoin-0.21.1.tar.gz \
+ && mv /bitcoin-0.21.1 /bitcoin \
+ && rm /bitcoin-0.21.1.tar.gz \
+ && mv /bitcoin/src/test/fuzz/block.cpp /bitcoin/src/test/fuzz/block.cpp.old \
+ && mv /bitcoin/src/coins.h /bitcoin/src/coins.h.old \
+ && mv /bitcoin/src/chain.h /bitcoin/src/chain.h.old \
+ && mv /bitcoin/src/txmempool.h /bitcoin/src/txmempool.old \
+ && mv /bitcoin/src/validation.cpp /bitcoin/src/validation.cpp.old \
+ && mv /bitcoin/src/validation.h /bitcoin/src/validation.h.old \
+ && mv /bitcoin/src/Makefile.test.include /bitcoin/src/Makefile.test.include.old \
+ && mv /bitcoin/src/validationinterface.cpp /bitcoin/src/validationinterface.cpp.old \
+ && mv /bitcoin/src/util/time.cpp /bitcoin/src/util/time.cpp.old \
+ && cp /code/block.cpp /bitcoin/src/test/fuzz/block.cpp \
+ && cp /code/FuzzedDataProvider.h /bitcoin/src/test/fuzz/FuzzedDataProvider.h \
+ && cp /code/Parser.h /bitcoin/src/test/fuzz/Parser.h \
+ && cp /code/Parser.cpp /bitcoin/src/test/fuzz/Parser.cpp \
+ && cp /code/Mutator.h /bitcoin/src/test/fuzz/Mutator.h \
+ && cp /code/coins.h /bitcoin/src/coins.h \
+ && cp /code/chain.h /bitcoin/src/chain.h \
+ && cp /code/txmempool.h /bitcoin/src/txmempool.h \
+ && cp /code/validataion.cpp /bitcoin/src/validation.cpp \
+ && cp /code/validataion.h /bitcoin/src/validation.h \
+ && cp /code/json.hpp /bitcoin/src/test/fuzz/json.hpp \
+ && cp /code/Makefile.test.include /bitcoin/src/Makefile.test.include \
+ && cp /code/validationinterface.cpp /bitcoin/src/validationinterface.cpp \
+ && cp /code/time.cpp /bitcoin/src/util/time.cpp \
+ && cd /bitcoin \
+ && ./autogen.sh \
+ && CC=/usr/bin/clang-17 CXX=/usr/bin/clang++-17 \
+    ./configure --enable-fuzz --with-sanitizers=address,fuzzer,undefined \
+ && make -j 8
+WORKDIR /bitcoin

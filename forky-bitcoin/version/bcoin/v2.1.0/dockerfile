@@ -1,0 +1,18 @@
+FROM ubuntu-bcoin:base
+LABEL email="forky.blockchain@gmail.com"
+LABEL description="Docker environment for Bcoin v2.1.0"
+COPY package.json /fuzz/
+WORKDIR /fuzz
+RUN npm install
+COPY main.js /fuzz/
+COPY chain.js chaindb.js coins.js encoding.js output.js /fuzz/modified/
+RUN mv node_modules/bcoin/lib/blockchain/chain.js node_modules/bcoin/lib/blockchain/chain.js.old\
+ && mv node_modules/bcoin/lib/blockchain/chaindb.js node_modules/bcoin/lib/blockchain/chaindb.js.old\
+ && mv node_modules/bcoin/lib/coins/coins.js node_modules/bcoin/lib/coins/coins.js.old\
+ && mv node_modules/bcoin/lib/primitives/output.js node_modules/bcoin/lib/primitives/output.js.old\
+ && cp modified/chain.js node_modules/bcoin/lib/blockchain/chain.js\
+ && cp modified/chaindb.js node_modules/bcoin/lib/blockchain/chaindb.js\
+ && cp modified/coins.js node_modules/bcoin/lib/coins/coins.js\
+ && cp modified/output.js node_modules/bcoin/lib/primitives/output.js\
+ && mv node_modules/bcoin/node_modules/bufio/lib/encoding.js node_modules/bcoin/node_modules/bufio/lib/encoding.js.old\
+ && cp modified/encoding.js node_modules/bcoin/node_modules/bufio/lib/encoding.js

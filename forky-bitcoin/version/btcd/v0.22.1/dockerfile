@@ -1,0 +1,13 @@
+FROM ubuntu-btcd:base
+LABEL email="forky.blockchain@gmail.com"
+LABEL description="Docker environment for btcd v0.22.1"
+COPY btcd-0.22.1.tar.gz /
+RUN tar -C / -xvf btcd-0.22.1.tar.gz
+COPY main.go /btcd-0.22.1/
+COPY blockindex.go chain.go chainio.go mediantime.go /btcd-0.22.1/modified/
+WORKDIR /btcd-0.22.1/
+RUN cp modified/blockindex.go /btcd-0.22.1/blockchain/blockindex.go\
+ && cp modified/chain.go /btcd-0.22.1/blockchain/chain.go\
+ && cp modified/chainio.go /btcd-0.22.1/blockchain/chainio.go\
+ && cp modified/mediantime.go /btcd-0.22.1/blockchain/mediantime.go\
+ && go mod tidy

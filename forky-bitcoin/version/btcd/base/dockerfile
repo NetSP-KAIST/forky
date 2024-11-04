@@ -1,0 +1,10 @@
+FROM ubuntu:18.04
+LABEL email="forky.blockchain@gmail.com"
+LABEL description="Docker environment for btcd base"
+RUN apt-get update\
+ && apt-get -y install --no-install-recommends\
+ ca-certificates curl\
+ && curl -LO https://go.dev/dl/go1.19.2.linux-amd64.tar.gz\
+ && tar -zxvf go1.19.2.linux-amd64.tar.gz -C /usr/local
+ENV GOPATH="/usr/local/go/"
+ENV PATH="/usr/local/go/bin:${PATH}"

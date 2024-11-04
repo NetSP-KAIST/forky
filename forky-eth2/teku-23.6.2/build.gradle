@@ -1,0 +1,976 @@
+import com.github.jk1.license.filter.LicenseBundleNormalizer
+import tech.pegasys.internal.license.reporter.GroupedLicenseHtmlRenderer
+import tech.pegasys.teku.depcheck.DepCheckPlugin
+
+import java.text.SimpleDateFormat
+
+import static tech.pegasys.teku.repackage.Repackage.repackage
+
+buildscript {
+  repositories {
+    mavenCentral()
+    maven {
+      url "https://artifacts.consensys.net/public/maven/maven/"
+      content { includeGroupByRegex('tech\\.pegasys\\..*')}
+    }
+  }
+  dependencies {
+    classpath 'tech.pegasys.internal.license.reporter:license-reporter:1.1.1'
+  }
+}
+
+plugins {
+  id 'com.diffplug.spotless' version '6.19.0'
+  id 'com.github.ben-manes.versions' version '0.47.0'
+  id 'com.github.jk1.dependency-license-report' version '2.5'
+  id 'io.spring.dependency-management' version '1.1.0'
+  id 'net.ltgt.errorprone' version '3.1.0' apply false
+  id 'de.undercouch.download' version '5.4.0'
+  id 'org.ajoberstar.grgit' version '5.2.0'
+}
+
+rootProject.version = calculatePublishVersion()
+def specificVersion = calculateVersion()
+def isDevelopBuild = rootProject.version.contains('develop')
+
+apply plugin: 'application'
+apply plugin: DepCheckPlugin
+
+defaultTasks 'build','checkLicense'
+
+def buildAliases = [
+  'dev': [
+    'compileJava',
+    'compileTestJava',
+    'compileJmhJava',
+    'compileIntegrationTestJava',
+    'compileReferenceTestJava',
+    'compilePropertyTestJava',
+    'spotlessApply',
+    'build',
+    'checkLicense',
+    'javadoc'],
+  'mash': [
+    'clean',
+    'spotlessApply',
+    'build',
+    'test']
+  ]
+
+def expandedTaskList = []
+
+gradle.startParameter.taskNames.each {
+  expandedTaskList << (buildAliases[it] ? buildAliases[it] : it)
+}
+gradle.startParameter.taskNames = expandedTaskList.flatten() as Iterable<String>
+
+def userHome = System.getProperty("user.home")
+
+def cloudsmithUser = project.hasProperty('cloudsmithUser') ? project.property('cloudsmithUser') : System.getenv('CLOUDSMITH_USER')
+def cloudsmithKey = project.hasProperty('cloudsmithApiKey') ? project.property('cloudsmithApiKey') : System.getenv('CLOUDSMITH_API_KEY')
+
+
+var baseInfrastructureProjects = [
+    ':infrastructure:bytes',
+    ':infrastructure:collections',
+    ':infrastructure:exceptions',
+    ':infrastructure:subscribers',
+    ':infrastructure:unsigned',
+]
+dependencyRules {
+  rules {
+    baseInfrastructureProjects.each { register(it) { allowed = [] }}
+    register(":infrastructure:") {
+      allowed = [":infrastructure:"]
+    }
+    register(":infrastructure:logging") {
+      allowed = [":infrastructure:unsigned"]
+    }
+
+    ['dataproviders', 'events', 'executionclient', 'executionlayer', 'networks', 'pow', 'signingrecord', 'spec'].forEach( {
+      register(":ethereum:${it}") {
+        allowed = [
+            ":infrastructure:",
+            ":ethereum:"
+        ]
+      }
+    })
+
+    // ethereum modules that need to be fixed. At least stop new dependencies being added
+    register(":ethereum:statetransition") {
+      allowed = [
+          ":infrastructure:",
+          ":ethereum:",
+          ":storage"
+      ]
+    }
+    register(":ethereum:weaksubjectivity") {
+      allowed = [
+          ":infrastructure:",
+          ":ethereum:",
+          ":storage"
+      ]
+    }
+  }
+}
+
+allprojects {
+  apply plugin: 'java-library'
+  apply plugin: 'java-test-fixtures'
+  apply plugin: 'io.spring.dependency-management'
+  apply plugin: 'net.ltgt.errorprone'
+  apply from: "${rootDir}/gradle/versions.gradle"
+
+  version = rootProject.version
+
+  task sourcesJar(type: Jar, dependsOn: classes) {
+    archiveClassifier = 'sources'
+    from sourceSets.main.allSource
+    jar.reproducibleFileOrder = true
+    jar.preserveFileTimestamps = false
+  }
+
+  sourceCompatibility = '11'
+  targetCompatibility = '11'
+
+  repositories {
+    mavenLocal()
+    mavenCentral()
+    maven {
+      url "https://artifacts.consensys.net/public/maven/maven/"
+      content { includeGroupByRegex('tech\\.pegasys($|\\..*)')}
+    }
+    maven {
+      url "https://dl.cloudsmith.io/public/libp2p/jvm-libp2p/maven/"
+      content { includeGroupByRegex('io\\.libp2p($|\\..*)') }
+    }
+    maven {
+      url "https://hyperledger.jfrog.io/artifactory/besu-maven/"
+      content { includeGroupByRegex('org\\.hyperledger\\.besu($|\\..*)') }
+    }
+  }
+
+  dependencies {
+    errorprone("com.google.errorprone:error_prone_core")
+    errorprone("tech.pegasys.tools.epchecks:errorprone-checks")
+  }
+
+  apply plugin: 'com.diffplug.spotless'
+  spotless {
+    java {
+      // This path needs to be relative to each project
+      target fileTree('.') {
+        include '**/*.java'
+        exclude '**/.gradle/**'
+        exclude 'web3j'
+        //Excluding tech.pegasys.teku.datastructures due to preferred formatting overwritten by plugin in getConstantsAsString.
+        exclude '**/src/main/java/tech/pegasys/teku/Constants.java'
+        exclude '**/proto'
+        exclude '**/resources'
+        exclude '**/src/*/generated'
+        exclude '**/src/*/generated_tests'
+        exclude '**/build/**'
+      }
+
+      importOrder 'tech.pegasys', 'net.consensys', 'java', ''
+      trimTrailingWhitespace()
+      endWithNewline()
+      licenseHeaderFile "${rootDir}/gradle/spotless.java.license"
+      // See gradle.properties for exports/opens flags required by JDK 16 and Google Java Format plugin
+      googleJavaFormat('1.13.0')
+    }
+  }
+
+  tasks.withType(JavaCompile) {
+    options.compilerArgs += [
+      '-Xlint:unchecked',
+      '-Xlint:cast',
+      '-Xlint:rawtypes',
+      '-Xlint:overloads',
+      '-Xlint:divzero',
+      '-Xlint:finally',
+      '-Xlint:static',
+      '-Werror',
+    ]
+    options.forkOptions.jvmArgs += [
+        '--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED',
+        '--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED',
+        '--add-opens=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED'
+    ]
+
+    options.errorprone {
+      enabled = !'true'.equalsIgnoreCase(System.getProperty('avt.disableErrorProne'))
+      disableWarningsInGeneratedCode
+
+      // Our equals need to be symmetric, this checker doesn't respect that
+      check('EqualsGetClass', net.ltgt.gradle.errorprone.CheckSeverity.OFF)
+      // We use the JSR-305 annotations instead of the Google annotations
+      check('ImmutableEnumChecker', net.ltgt.gradle.errorprone.CheckSeverity.OFF)
+      // Storing a lambda to avoid code duplication is not a bad thing
+      check('UnnecessaryLambda', net.ltgt.gradle.errorprone.CheckSeverity.OFF)
+      // Generates a ton of false alarms for no real value
+      check('LongDoubleConversion', net.ltgt.gradle.errorprone.CheckSeverity.OFF)
+      check('InlineMeSuggester', net.ltgt.gradle.errorprone.CheckSeverity.OFF)
+      check('CanIgnoreReturnValueSuggester', net.ltgt.gradle.errorprone.CheckSeverity.OFF)
+      check('DirectInvocationOnMock', net.ltgt.gradle.errorprone.CheckSeverity.OFF)
+
+      // We don't apply strict javadoc requirements yet
+      check('EmptyBlockTag', net.ltgt.gradle.errorprone.CheckSeverity.OFF)
+      check('MissingSummary', net.ltgt.gradle.errorprone.CheckSeverity.OFF)
+
+      // Force strict compliance with Java naming conventions
+      check('JavaCase', net.ltgt.gradle.errorprone.CheckSeverity.WARN)
+
+      // Check for uses of == that should probably be .equals
+      check('ReferenceComparison', net.ltgt.gradle.errorprone.CheckSeverity.WARN)
+
+      // These checks are imported from errorprone-checks dependency but not required in Teku
+      check('MethodInputParametersMustBeFinal', net.ltgt.gradle.errorprone.CheckSeverity.OFF)
+      check('BannedMethod', net.ltgt.gradle.errorprone.CheckSeverity.OFF)
+      check('ExperimentalCliOptionMustBeCorrectlyDisplayed', net.ltgt.gradle.errorprone.CheckSeverity.OFF)
+
+      // These are experimental checks that we want enabled
+      check('MissingBraces', net.ltgt.gradle.errorprone.CheckSeverity.WARN)
+      check('InsecureCryptoUsage', net.ltgt.gradle.errorprone.CheckSeverity.WARN)
+      check('WildcardImport', net.ltgt.gradle.errorprone.CheckSeverity.WARN)
+      check('DeduplicateConstants', net.ltgt.gradle.errorprone.CheckSeverity.WARN)
+      check('RedundantOverride', net.ltgt.gradle.errorprone.CheckSeverity.WARN)
+      check('RedundantThrows', net.ltgt.gradle.errorprone.CheckSeverity.WARN)
+      check('UnnecessarilyFullyQualified', net.ltgt.gradle.errorprone.CheckSeverity.WARN)
+      check('InitializeInline', net.ltgt.gradle.errorprone.CheckSeverity.WARN)
+      check('ClassName', net.ltgt.gradle.errorprone.CheckSeverity.WARN)
+      check('InterfaceWithOnlyStatics', net.ltgt.gradle.errorprone.CheckSeverity.WARN)
+      check('PackageLocation', net.ltgt.gradle.errorprone.CheckSeverity.WARN)
+    }
+    options.encoding = 'UTF-8'
+  }
+  /*
+   * Pass some system properties provided on the gradle command line to test executions for
+   * convenience.
+   *
+   * The properties passed are:
+   * - 'test.ethereum.include': allows to run a single Ethereum reference tests. For instance,
+   *   running a single general state test can be done with:
+   *    ./gradlew :ethereum:tech.pegasys.teku.ethereum.vm:test -Dtest.single=GeneralStateTest -Dtest.ethereum.include=callcodecallcallcode_101-Frontier
+   *   The meaning being that will be run only the tests for which the value passed as "include"
+   *   (which can be a java pattern) matches parts of the test name. Knowing that tests names for
+   *   reference tests are of the form:
+   *     <name>(-<milestone>([<variant>])?)?
+   *   where <name> is the test name as defined in the json file (usually the name of the json file
+   *   as well), <milestone> is the Ethereum milestone tested (not all test use it) and <variant>
+   *   is only use in some general state tests where for the same json file and same milestone,
+   *   multiple variant of that test are run. The variant is a simple number.
+   * - 'test.ethereum.state.eip': for general state tests, allows to only run tests for the
+   *   milestone specified by this value. So for instance,
+   *    ./gradlew :ethereum:tech.pegasys.teku.ethereum.vm:test -Dtest.single=GeneralStateTest -Dtest.ethereum.state.eip=Frontier
+   *   only run general state tests for Frontier. Note that this behavior could be achieved as well
+   *   with the 'include' option above since it is a pattern, but this is a slightly more convenient
+   *   option.
+   * - 'root.log.level' and 'evm.log.level': allow to control the log level used during the tests.
+   */
+  test {
+    jvmArgs = [
+      '-Xmx4g',
+      '-XX:-UseGCOverheadLimit'
+    ]
+    Set toImport = [
+      'test.ethereum.include',
+      'test.ethereum.state.eip',
+      'root.log.level',
+      'evm.log.level'
+    ]
+    testLogging.showStandardStreams = project.hasProperty("showOutput") ? project.property("showOutput") : false
+    for (String name : toImport) {
+      if (System.getProperty(name) != null) {
+        systemProperty name, System.getProperty(name)
+      }
+    }
+  }
+
+  javadoc {
+    options.addStringOption('Xdoclint:all,-missing', '-quiet')
+    options.addStringOption('Xwerror', '-html5')
+    options.encoding = 'UTF-8'
+  }
+}
+
+def refTestVersion = 'v1.4.0-beta.0' // Arbitrary change to refresh cache number: 1
+def blsRefTestVersion = 'v0.1.2'
+def refTestBaseUrl = 'https://github.com/ethereum/consensus-spec-tests/releases/download'
+def blsRefTestBaseUrl = 'https://github.com/ethereum/bls12-381-tests/releases/download'
+def refTestDownloadDir = "${buildDir}/refTests/${refTestVersion}"
+def blsRefTestDownloadDir = "${buildDir}/blsRefTests/${blsRefTestVersion}"
+def refTestExpandDir = "${project.rootDir}/eth-reference-tests/src/referenceTest/resources/consensus-spec-tests/"
+
+task downloadEthRefTests(type: Download) {
+  src([
+      "${refTestBaseUrl}/${refTestVersion}/general.tar.gz",
+      "${refTestBaseUrl}/${refTestVersion}/minimal.tar.gz",
+      "${refTestBaseUrl}/${refTestVersion}/mainnet.tar.gz"
+  ])
+  dest "${refTestDownloadDir}"
+  overwrite false
+}
+
+task downloadBlsRefTests(type: Download) {
+  src([
+      "${blsRefTestBaseUrl}/${blsRefTestVersion}/bls_tests_yaml.tar.gz"
+  ])
+  dest "${blsRefTestDownloadDir}/bls_tests_yaml.tar.gz"
+  overwrite false
+}
+
+task downloadRefTests(dependsOn: [downloadEthRefTests, downloadBlsRefTests])
+
+task cleanRefTestsGeneral(type: Delete) {
+  delete "${refTestExpandDir}/tests/general"
+}
+
+task expandRefTestsGeneral(type: Copy, dependsOn: [cleanRefTestsGeneral, downloadEthRefTests]) {
+  from tarTree("${refTestDownloadDir}/general.tar.gz")
+  into refTestExpandDir
+}
+
+task cleanRefTestsMainnet(type: Delete) {
+  delete "${refTestExpandDir}/tests/mainnet"
+}
+
+task expandRefTestsMainnet(type: Copy, dependsOn: [cleanRefTestsMainnet, downloadEthRefTests]) {
+  from tarTree("${refTestDownloadDir}/mainnet.tar.gz")
+  into refTestExpandDir
+}
+
+task cleanRefTestsMinimal(type: Delete) {
+  delete "${refTestExpandDir}/tests/minimal"
+}
+
+task expandRefTestsMinimal(type: Copy, dependsOn: [cleanRefTestsMinimal, downloadEthRefTests]) {
+  from tarTree("${refTestDownloadDir}/minimal.tar.gz")
+  into refTestExpandDir
+}
+
+task cleanRefTestsBls(type: Delete) {
+  delete "${refTestExpandDir}/tests/bls"
+}
+
+task expandRefTestsBls(type: Copy, dependsOn: [cleanRefTestsBls, downloadBlsRefTests]) {
+  from tarTree("${blsRefTestDownloadDir}/bls_tests_yaml.tar.gz")
+  into "${refTestExpandDir}/tests/bls"
+}
+
+task expandRefTests(dependsOn: [expandRefTestsGeneral, expandRefTestsMainnet, expandRefTestsMinimal, expandRefTestsBls])
+task cleanRefTests(dependsOn: [cleanRefTestsGeneral, cleanRefTestsMainnet, cleanRefTestsMinimal, cleanRefTestsBls])
+
+task deploy() {}
+
+licenseReport {
+  configurations = ['runtimeClasspath']
+  outputDir = "${buildDir}/reports/licenses"
+  // These jars don't have machine readable license information
+  excludes = [
+      'org.junit:junit-bom',
+      'org.rxtx:rxtx',
+      'com.fasterxml.jackson:jackson-bom',
+      'io.netty:netty-tcnative-classes',
+      'org.jetbrains.kotlinx:kotlinx-coroutines-bom',
+      'org.jetbrains.kotlinx:kotlinx-coroutines-core',
+  ]
+  allowedLicensesFile = new File("${rootDir}/gradle/license-report-config/allowed-licenses.json")
+  filters = [new LicenseBundleNormalizer()]
+  renderers = [new GroupedLicenseHtmlRenderer(includeTimestamp: false)]
+}
+
+task checkMavenCoordinateCollisions {
+  doLast {
+    def coordinates = [:]
+    getAllprojects().forEach {
+      if (it.properties.containsKey('publishing') && it.jar?.enabled) {
+        def coordinate = it.publishing?.publications[0].coordinates
+        if (coordinates.containsKey(coordinate)) {
+          throw new GradleException("Duplicate maven coordinates detected, ${coordinate} is used by " +
+              "both ${coordinates[coordinate]} and ${it.path}.\n" +
+              "Please add a `publishing` script block to one or both subprojects.")
+        }
+        coordinates[coordinate] = it.path
+      }
+    }
+  }
+}
+
+check.dependsOn('checkMavenCoordinateCollisions')
+
+application {
+  applicationName = "teku"
+  getMainClass().set("tech.pegasys.teku.Teku")
+  applicationDefaultJvmArgs = [
+      "-Dvertx.disableFileCPResolving=true",
+      "-Dteku.home=TEKU_HOME",
+      // We shutdown log4j ourselves, as otherwise his shutdown hook runs before our own and whatever
+      // happens during shutdown is not logged.
+      "-Dlog4j.shutdownHookEnabled=false",
+      "-Dlog4j2.formatMsgNoLookups=true",
+      // run `jcmd <PID> VM.native_memory` to check JVM native memory consumption
+      "-XX:NativeMemoryTracking=summary",
+      // 32Mb for Netty Direct ByteBuf
+      "-Dio.netty.maxDirectMemory=33554432"
+  ]
+}
+
+task autocomplete(type: JavaExec) {
+  dependsOn compileJava
+  outputs.file "build/teku.autocomplete.sh"
+
+  mainClass = application.getMainClass()
+  args "debug-tools", "generate-autocomplete", "--output", "build/teku.autocomplete.sh"
+  classpath sourceSets.main.runtimeClasspath
+}
+
+installDist {
+  dependsOn checkLicense, autocomplete
+}
+
+distTar {
+  dependsOn checkLicense, autocomplete
+  doFirst {
+    delete fileTree(dir: 'build/distributions', include: '*.tar.gz')
+  }
+  compression = Compression.GZIP
+  archiveExtension = 'tar.gz'
+  reproducibleFileOrder = true
+  doLast {
+    repackage(archiveFile.get().toString(), lastCommitDate())
+  }
+}
+
+distZip {
+  dependsOn checkLicense, autocomplete
+  doFirst {
+    delete fileTree(dir: 'build/distributions', include: '*.zip')
+  }
+  reproducibleFileOrder = true
+  doLast {
+    repackage(archiveFile.get().toString(), lastCommitDate())
+  }
+}
+
+startScripts {
+
+  def shortenWindowsClasspath = { line ->
+    line = line.replaceAll(/^set CLASSPATH=.*$/, "set CLASSPATH=%APP_HOME%/lib/*")
+  }
+
+  doLast {
+    unixScript.text = unixScript.text.replace('TEKU_HOME', '\$APP_HOME')
+    windowsScript.text = windowsScript.text.replace('TEKU_HOME', '%~dp0..')
+
+    // Prevent the error originating from the 8191 chars limit on Windows
+    windowsScript.text =
+        windowsScript
+            .readLines()
+            .collect(shortenWindowsClasspath)
+            .join('\r\n')
+  }
+}
+
+// rename the top level dir from teku-<version> to teku and this makes it really
+// simple for use in docker
+tasks.register("dockerDistUntar") {
+  dependsOn distTar
+  def dockerBuildPath = "build/docker-teku/"
+  def distTarFile = distTar.outputs.files.singleFile
+  def distTarFileName = distTar.outputs.files.singleFile.name.replace(".tar.gz", "")
+
+  doFirst {
+    def dockerBuildDir = new File(dockerBuildPath)
+    dockerBuildDir.deleteDir()
+    dockerBuildDir.mkdir()
+    copy {
+      from tarTree(distTarFile)
+      into(dockerBuildPath)
+    }
+    def dockerDist = file("${dockerBuildPath}/${distTarFileName}")
+    dockerDist.renameTo("${dockerBuildPath}/teku")
+  }
+}
+
+def dockerImage = "consensys/teku"
+def dockerJdkVariants = [ "jdk17", "jdk16", ]
+def dockerBuildDir = "build/docker-teku/"
+
+task distDocker  {
+  dependsOn dockerDistUntar
+
+  def dockerBuildVersion = 'develop'
+  doLast {
+    for (def variant in dockerJdkVariants) {
+      copy {
+        from file("${projectDir}/docker/${variant}/Dockerfile")
+        into(dockerBuildDir)
+      }
+      exec {
+        def image = "${dockerImage}:${dockerBuildVersion}-${variant}"
+        workingDir dockerBuildDir
+        executable "sh"
+        args "-c", "docker build --pull --build-arg BUILD_DATE=${buildTime()} --build-arg VERSION=${dockerBuildVersion} --build-arg VCS_REF=${getCheckedOutGitCommitHash()} -t ${image} ."
+      }
+    }
+    // tag the "default" (which is the variant in the zero position)
+    exec {
+      executable "sh"
+      args "-c", "docker tag '${dockerImage}:${dockerBuildVersion}-${dockerJdkVariants[0]}' '${dockerImage}:${dockerBuildVersion}'"
+    }
+  }
+}
+
+task uploadDocker {
+  dependsOn([distDocker])
+  def dockerBuildVersion = "${rootProject.version}".replace('+', '-')
+  def architecture = System.getenv('architecture')
+  def platform = System.getenv('platform')
+
+  def versionPrefixes = [dockerBuildVersion]
+  if (project.hasProperty('branch') && project.property('branch') == 'master') {
+    versionPrefixes.add('develop')
+  }
+
+  if (!isDevelopBuild) {
+    versionPrefixes.add('latest')
+    versionPrefixes.add(dockerBuildVersion.split(/\./)[0..1].join('.'))
+  }
+
+  doLast {
+    for (def variant in dockerJdkVariants) {
+      def tags = ""
+      versionPrefixes.forEach { prefix -> tags += "-t ${dockerImage}:${prefix.trim()}-${variant}-${architecture} "}
+
+      if (variant == dockerJdkVariants[0]) {
+        versionPrefixes.forEach { prefix -> tags += "-t ${dockerImage}:${prefix.trim()}-${architecture} "}
+      }
+
+      copy {
+        from file("${projectDir}/docker/${variant}/Dockerfile")
+        into(dockerBuildDir)
+      }
+
+      exec {
+        workingDir dockerBuildDir
+        executable "sh"
+        args "-c", "docker build --pull --platform ${platform} --build-arg BUILD_DATE=${buildTime()} --build-arg VERSION=${dockerBuildVersion} --build-arg VCS_REF=${getCheckedOutGitCommitHash()} ${tags} ."
+      }
+
+      //docker trust sign runs one image at a time, so we have to remove the '-t' in the string and split into a list we can use
+      def trustTags = tags.replaceAll( '-t ', '' ).trim().split(' ')
+      for (def t in trustTags) {
+        exec {
+          workingDir dockerBuildDir
+          executable "sh"
+          args "-c", "docker trust sign ${t} && docker push ${t} "
+        }
+      }
+    }
+  }
+}
+
+task manifestDocker {
+  def dockerBuildVersion = "${rootProject.version}".replace('+', '-')
+  def versionPrefixes = [dockerBuildVersion]
+  def platforms = ["arm64", "amd64"]
+
+  if (project.hasProperty('branch') && project.property('branch') == 'master') {
+    versionPrefixes.add('develop')
+  }
+
+  if (!isDevelopBuild) {
+    versionPrefixes.add('latest')
+    versionPrefixes.add(dockerBuildVersion.split(/\./)[0..1].join('.'))
+  }
+
+  doLast {
+    for (def variant in dockerJdkVariants) {
+      def tags = []
+      def cmd = ""
+      versionPrefixes.forEach { prefix -> tags.add("${dockerImage}:${prefix.trim()}-${variant}") }
+
+      if (variant == dockerJdkVariants[0]) {
+        versionPrefixes.forEach { prefix -> tags.add("${dockerImage}:${prefix.trim()}") }
+      }
+
+      for (def tag in tags) {
+        platforms.forEach { platform -> cmd += "${tag}-${platform} " }
+        exec {
+          executable "sh"
+          args "-c", "docker manifest create ${tag} ${cmd} && docker manifest push ${tag}"
+        }
+      }
+    }
+  }
+}
+
+subprojects {
+  tasks.withType(Test) {
+    // If GRADLE_MAX_TEST_FORKS is not set, use half the available processors
+    maxParallelForks = (System.getenv('GRADLE_MAX_TEST_FORKS') ?: (Runtime.runtime.availableProcessors().intdiv(2) ?: 1)).toInteger()
+    useJUnitPlatform()
+    reports {
+      junitXml.required = true
+    }
+    filter {
+      // Support filtering tests with the --tests option to gradle
+      // Without this the build fails if you filter out all the tests for any module
+      setFailOnNoMatchingTests(false)
+    }
+  }
+
+  tasks.withType(JavaCompile) {
+    options.fork = true
+    options.incremental = true
+  }
+
+  sourceSets {
+    integrationTest {
+      java {
+        compileClasspath += main.output
+        runtimeClasspath += main.output
+        srcDir file('src/integration-test/java')
+      }
+      resources.srcDir file('src/integration-test/resources')
+    }
+    acceptanceTest {
+      java {
+        compileClasspath += main.output
+        runtimeClasspath += main.output
+        srcDir file('src/acceptance-test/java')
+      }
+      resources.srcDir file('src/acceptance-test/resources')
+    }
+    propertyTest {
+      java {
+        compileClasspath += main.output
+        runtimeClasspath += main.output
+        srcDir file('src/property-test/java')
+      }
+      resources.srcDir file('src/property-test/resources')
+    }
+    referenceTest {
+      java {
+        srcDir file('src/referenceTest/generated_tests')
+        srcDir file('src/referenceTest/java')
+      }
+    }
+  }
+
+  def sourceSetIsPopulated = { sourceSetName ->
+    def result = project.sourceSets.names.contains(sourceSetName) && !project.sourceSets.getAt(sourceSetName).allSource.empty
+    logger.info("Project = " + project.name + " Has Source Set (" + sourceSetName + ") = " + result + "(" + project.sourceSets.names + ")")
+    return result
+  }
+
+  apply plugin: 'idea'
+  idea {
+    module {
+      testSourceDirs += project.sourceSets.testFixtures.java.srcDirs
+      testSourceDirs += project.sourceSets.testFixtures.resources.srcDirs
+      testSourceDirs += project.sourceSets.integrationTest.java.srcDirs
+      testSourceDirs += project.sourceSets.integrationTest.resources.srcDirs
+      testSourceDirs += project.sourceSets.acceptanceTest.java.srcDirs
+      testSourceDirs += project.sourceSets.acceptanceTest.resources.srcDirs
+      testSourceDirs += project.sourceSets.propertyTest.java.srcDirs
+      testSourceDirs += project.sourceSets.propertyTest.resources.srcDirs
+      testSourceDirs += project.sourceSets.referenceTest.java.srcDirs
+      testSourceDirs += project.sourceSets.referenceTest.resources.srcDirs
+    }
+  }
+
+  if (sourceSetIsPopulated("main") || sourceSetIsPopulated("testFixtures")) {
+    apply plugin: 'maven-publish'
+
+    publishing {
+      repositories {
+        maven {
+          name = "cloudsmith"
+          url = "https://api-g.cloudsmith.io/maven/consensys/teku/"
+          credentials {
+            username = cloudsmithUser
+            password = cloudsmithKey
+          }
+        }
+      }
+      publications {
+        mavenJava(MavenPublication) {
+          groupId "tech.pegasys.teku.internal"
+          version "${project.version}"
+          if (sourceSetIsPopulated("main")) {
+            from components.java
+            artifact sourcesJar
+          }
+
+          versionMapping {
+            usage('java-api') { fromResolutionOf('runtimeClasspath') }
+            usage('java-runtime') { fromResolutionResult() }
+          }
+          suppressPomMetadataWarningsFor('testFixturesApiElements')
+          suppressPomMetadataWarningsFor('testFixturesRuntimeElements')
+          pom {
+            name = "Teku - ${project.name}"
+            url = 'https://github.com/ConsenSys/teku'
+            licenses {
+              license {
+                name = 'The Apache License, Version 2.0'
+                url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+              }
+            }
+            scm {
+              connection = 'scm:git:git://github.com/ConsenSys/teku.git'
+              developerConnection = 'https://github.com/ConsenSys/teku.git'
+              url = 'https://github.com/ConsenSys/teku'
+            }
+          }
+        }
+      }
+    }
+  }
+
+  if (project.file('src/jmh/java').exists()) {
+    sourceSets {
+      jmh {
+        java.srcDirs = ['src/jmh/java']
+        resources.srcDirs = ['src/jmh/resources']
+        compileClasspath += sourceSets.main.runtimeClasspath
+      }
+    }
+
+    tasks.getByName("compileJmhJava") {
+
+      options.compilerArgs = []
+
+      options.errorprone {
+        enabled = false
+      }
+    }
+
+    dependencies {
+      jmhImplementation 'org.openjdk.jmh:jmh-core'
+      jmhAnnotationProcessor 'org.openjdk.jmh:jmh-generator-annprocess'
+    }
+
+    classes.finalizedBy(jmhClasses)
+
+    task jmh(type: JavaExec, dependsOn: jmhClasses) {
+      mainClass = 'org.openjdk.jmh.Main'
+      classpath = sourceSets.jmh.compileClasspath + sourceSets.jmh.runtimeClasspath
+      systemProperty("jmh.blackhole.mode", "COMPILER")
+    }
+  }
+
+
+  configurations {
+    integrationTestImplementation.extendsFrom testImplementation
+    acceptanceTestImplementation.extendsFrom testImplementation
+    propertyTestImplementation.extendsFrom testImplementation
+    referenceTestImplementation.extendsFrom testImplementation
+
+    integrationTestRuntimeOnly.extendsFrom testRuntimeOnly
+    acceptanceTestRuntimeOnly.extendsFrom testRuntimeOnly
+    propertyTestRuntimeOnly.extendsFrom testRuntimeOnly
+    referenceTestRuntimeOnly.extendsFrom testRuntimeOnly
+  }
+
+  def jarName = project.name
+  def parent = project.parent
+  while (parent != null) {
+    if (parent != rootProject || jarName != 'teku') {
+      jarName = parent.name + '-' + jarName
+    }
+    parent = parent.parent
+  }
+
+  jar {
+    archiveBaseName = jarName
+    manifest {
+      attributes(
+          'Specification-Title': jarName,
+          'Specification-Version': project.version,
+          'Implementation-Title': jarName,
+          'Implementation-Version': specificVersion
+      )
+    }
+    reproducibleFileOrder = true
+    preserveFileTimestamps = false
+  }
+
+  dependencies {
+    implementation 'com.google.guava:guava'
+    implementation 'org.apache.commons:commons-lang3'
+    implementation 'org.apache.logging.log4j:log4j-api'
+
+    runtimeOnly 'org.apache.logging.log4j:log4j-core'
+    runtimeOnly 'org.apache.logging.log4j:log4j-slf4j-impl'
+
+    testImplementation 'org.apache.tuweni:tuweni-junit'
+    testImplementation 'org.assertj:assertj-core'
+    testImplementation 'org.mockito:mockito-core'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params'
+
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+
+    testFixturesImplementation 'org.assertj:assertj-core'
+
+    testFixturesRuntimeOnly 'org.apiguardian:apiguardian-api'
+
+    propertyTestImplementation 'net.jqwik:jqwik'
+  }
+
+  if (!baseInfrastructureProjects.contains(project.path)) {
+    dependencies.implementation(project(':infrastructure:unsigned'))
+    dependencies.testRuntimeOnly(dependencies.testFixtures(project(':infrastructure:logging')))
+  }
+
+  task integrationTest(type: Test, dependsOn:["compileIntegrationTestJava"]){
+    group = "verification"
+    description = "Runs the Teku integration tests"
+
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+  }
+
+  task acceptanceTest(type: Test, dependsOn:["compileAcceptanceTestJava", rootProject.distDocker]){
+    group = "verification"
+    description = "Runs the Teku acceptance tests"
+
+    systemProperty "teku.testArtifactDir", new File(project.buildDir, "test-artifacts").getAbsolutePath()
+    testClassesDirs = sourceSets.acceptanceTest.output.classesDirs
+    classpath = sourceSets.acceptanceTest.runtimeClasspath
+  }
+
+  task propertyTest(type: Test, dependsOn:["compilePropertyTestJava"]){
+    group = "verification"
+    description = "Runs the Teku property tests"
+
+    testClassesDirs = sourceSets.propertyTest.output.classesDirs
+    classpath = sourceSets.propertyTest.runtimeClasspath
+  }
+
+  task referenceTest(type: Test, dependsOn:["compileReferenceTestJava"]){
+    group = "verification"
+    description = "Runs the Teku reference tests"
+
+    testClassesDirs = sourceSets.referenceTest.output.classesDirs
+    classpath = sourceSets.referenceTest.runtimeClasspath
+  }
+}
+
+jar { enabled = false }
+
+run {
+  if(project.hasProperty('generateFlow')){
+    def flowJVMArgs = [
+      "-javaagent:${userHome}/.flow/resources/javaagent.jar",
+      "-Dflow.agent.include=tech.pegasys.teku,tech.pegasys.teku.services.beaconchain,tech.pegasys.teku.statetransition,tech.pegasys.teku.statetransition.util",
+      "-Dflow.agent.exclude=tech.pegasys.teku.datastructures.state,tech.pegasys.teku.datastructures.blocks,tech.pegasys.teku.datastructures.operations,tech.pegasys.teku.datastructures.util.bitwise,tech.pegasys.teku.util.hashtree,tech.pegasys.teku.util.alogger,tech.pegasys.teku.storage,tech.pegasys.teku.util.bls,tech.pegasys.teku.util.mikuli,tech.pegasys.teku.networking.p2p,tech.pegasys.teku.validator.coordinator",
+      "-Dflow.agent.autostart",
+      "-Dflow.agent.execution-name=teku"
+      ]
+   applicationDefaultJvmArgs.addAll(flowJVMArgs)
+  }
+  args project.hasProperty("teku.run.args") ? project.property("teku.run.args").toString().split("\\s+") : []
+  doFirst {
+    applicationDefaultJvmArgs = applicationDefaultJvmArgs.collect{it.replace('TEKU_HOME', "$buildDir/teku")}
+  }
+}
+
+dependencies {
+  implementation project(':teku')
+  errorprone 'com.google.errorprone:error_prone_core'
+  errorprone 'tech.pegasys.tools.epchecks:errorprone-checks'
+}
+
+distributions {
+  main {
+    contents {
+      from("LICENSE")
+      from("build/reports/licenses") {
+        into "licenses"
+        exclude "**/dependencies-without-allowed-license.json"
+        exclude "**/project-licenses-for-check-license-task.json"
+      }
+      from("libs") { into "native" }
+      from("build/teku.autocomplete.sh")
+    }
+  }
+}
+
+// http://label-schema.org/rc1/
+// using the RFC3339 format "2016-04-12T23:20:50.52Z"
+def buildTime() {
+  def df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'")
+  df.setTimeZone(TimeZone.getTimeZone("UTC"))
+  return df.format(new Date())
+}
+
+// Get the date of the last git commit.
+def lastCommitDate() {
+  if (!grgit) {
+    return new Date()
+  }
+  return grgit.log(maxCommits: 1).get(0).date
+}
+
+// Calculate the version that this build would be published under (if it is published)
+// If this exact commit is tagged, use the tag
+// If this is on a release-* branch, use the most recent tag appended with +develop (e.g. 0.1.1-RC1+develop)
+// Otherwise, use develop
+def calculatePublishVersion() {
+  if (!grgit) {
+    return 'develop'
+  }
+  def specificVersion = calculateVersion()
+  def isReleaseBranch = grgit.branch.current().name.startsWith('release-')
+  if (specificVersion.contains('+')) {
+    return isReleaseBranch ? "${specificVersion.substring(0, specificVersion.indexOf('+'))}+develop" : "develop"
+  }
+  return specificVersion
+}
+
+// Calculate the version that teku --version will report (among other places)
+// If this exact commit is tagged, use the tag
+// Otherwise use git describe --tags and replace the - after the tag with a +
+def calculateVersion() {
+  if (!grgit) {
+    logger.warn("Not building from a git checkout. Version information will not be available. Building from a git checkout is strongly recommended.")
+    return 'UNKNOWN+develop'
+  }
+  String version = grgit.describe(tags: true)
+  if (version == null) {
+    return "UNKNOWN+g${grgit.head().abbreviatedId}"
+  }
+  def versionPattern = ~/^(?<lastVersion>.*)-(?<devVersion>[0-9]+-g[a-z0-9]+)$/
+  def matcher = version =~ versionPattern
+  if (matcher.find()) {
+    return "${matcher.group("lastVersion")}+${matcher.group("devVersion")}"
+  }
+  return version
+}
+
+task printVersion() {
+  doFirst {
+    print "Specific version: ${specificVersion}  Publish version: ${project.version}"
+  }
+}
+
+
+def getCheckedOutGitCommitHash() {
+  def takeFromHash = 8
+  grgit ? grgit.head().id.take(takeFromHash) : 'UNKNOWN'
+}
+
+task cloudsmithUpload {
+  dependsOn([distTar, distZip])
+  doLast {
+    exec {
+      executable project.file("scripts/cloudsmith-upload.sh")
+      args rootProject.version, distTar.archiveFile.get(), distZip.archiveFile.get()
+    }
+  }
+}
+

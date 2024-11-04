@@ -1,0 +1,27 @@
+{
+  "title" : "ListKeysResponse",
+  "type" : "object",
+  "required" : [ "data" ],
+  "properties" : {
+    "data" : {
+      "type" : "array",
+      "items" : {
+        "type" : "object",
+        "required" : [ "validating_pubkey", "readonly" ],
+        "properties" : {
+          "validating_pubkey" : {
+            "$ref" : "#/components/schemas/Pubkey"
+          },
+          "derivation_path" : {
+            "type" : "string",
+            "description" : "The derivation path (if present in the imported keystore)."
+          },
+          "readonly" : {
+            "type" : "boolean",
+            "description" : "Whether the validator can be modified"
+          }
+        }
+      }
+    }
+  }
+}

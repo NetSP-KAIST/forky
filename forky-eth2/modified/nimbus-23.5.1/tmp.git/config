@@ -1,0 +1,11 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+[remote "origin"]
+	url = https://github.com/status-im/nimbus-eth2.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "stable"]
+	remote = origin
+	merge = refs/heads/stable

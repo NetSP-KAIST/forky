@@ -1,0 +1,31 @@
+### Sample dicrectory ###
+#import/
+result/
+fuzzing_corpus/
+regtest_datadir/
+all_test_cases/
+test_cases/
+output/
+log/
+
+### VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# Local History for Visual Studio Code
+.history/
+
+### VisualStudioCode Patch ###
+# Ignore all local history of files
+.history
+.ionide
+
+# Support for Project snippet scope
+!.vscode/*.code-snippets
+
+# Local files
+*.time

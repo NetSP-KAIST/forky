@@ -1,0 +1,8 @@
+# Added by cargo
+
+/target
+/workspace
+*.txt
+*.log
+*.profraw
+*.profdata

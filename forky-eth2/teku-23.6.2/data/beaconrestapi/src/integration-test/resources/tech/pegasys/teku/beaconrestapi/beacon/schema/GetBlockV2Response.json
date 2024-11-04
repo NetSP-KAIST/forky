@@ -1,0 +1,32 @@
+{
+  "title" : "GetBlockV2Response",
+  "type" : "object",
+  "required" : [ "version", "execution_optimistic", "finalized", "data" ],
+  "properties" : {
+    "version" : {
+      "type" : "string",
+      "enum" : [ "phase0", "altair", "bellatrix", "capella", "deneb" ]
+    },
+    "execution_optimistic" : {
+      "type" : "boolean"
+    },
+    "finalized" : {
+      "type" : "boolean"
+    },
+    "data" : {
+      "title" : "SignedBeaconBlock",
+      "type" : "object",
+      "oneOf" : [ {
+        "$ref" : "#/components/schemas/SignedBeaconBlockPhase0"
+      }, {
+        "$ref" : "#/components/schemas/SignedBeaconBlockAltair"
+      }, {
+        "$ref" : "#/components/schemas/SignedBeaconBlockBellatrix"
+      }, {
+        "$ref" : "#/components/schemas/SignedBeaconBlockCapella"
+      }, {
+        "$ref" : "#/components/schemas/SignedBeaconBlockDeneb"
+      } ]
+    }
+  }
+}

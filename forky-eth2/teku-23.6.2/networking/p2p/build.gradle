@@ -1,0 +1,50 @@
+dependencies {
+  implementation project(':beacon:pow')
+  implementation project(':ethereum:spec')
+  implementation project(':ethereum:statetransition')
+  implementation project(':infrastructure:async')
+  implementation project(':infrastructure:bytes')
+  implementation project(':infrastructure:collections')
+  implementation project(':infrastructure:crypto')
+  implementation project(':infrastructure:exceptions')
+  implementation project(':infrastructure:io')
+  implementation project(':infrastructure:logging')
+  implementation project(':infrastructure:metrics')
+  implementation project(':infrastructure:subscribers')
+  implementation project(':infrastructure:time')
+  implementation project(':infrastructure:version')
+  implementation project(':infrastructure:serviceutils')
+  implementation project(':storage')
+  implementation project(':infrastructure:ssz')
+
+  implementation 'io.libp2p:jvm-libp2p-minimal'
+  implementation 'io.projectreactor:reactor-core'
+  implementation 'org.apache.tuweni:tuweni-units'
+  implementation 'org.apache.tuweni:tuweni-crypto'
+  implementation 'tech.pegasys.discovery:discovery'
+
+  testImplementation testFixtures(project(':ethereum:statetransition'))
+  testImplementation testFixtures(project(':ethereum:spec'))
+  testImplementation testFixtures(project(':infrastructure:metrics'))
+  testImplementation testFixtures(project(':infrastructure:async'))
+  testImplementation testFixtures(project(':infrastructure:time'))
+
+  testImplementation 'org.hyperledger.besu.internal:metrics-core'
+
+  testFixturesApi 'org.apache.tuweni:tuweni-bytes'
+
+  testFixturesCompileOnly 'org.jetbrains.kotlin:kotlin-stdlib'
+
+  testFixturesImplementation testFixtures(project(':ethereum:spec'))
+  testFixturesImplementation project(':ethereum:networks')
+  testFixturesImplementation project(':storage')
+  testFixturesImplementation testFixtures(project(':infrastructure:async'))
+  testFixturesImplementation testFixtures(project(':infrastructure:crypto'))
+  testFixturesImplementation testFixtures(project(':infrastructure:time'))
+  testFixturesImplementation project(':infrastructure:subscribers')
+
+  testFixturesImplementation 'org.hyperledger.besu:plugin-api'
+  testFixturesImplementation 'org.hyperledger.besu.internal:metrics-core'
+  testFixturesImplementation 'io.libp2p:jvm-libp2p-minimal'
+  testFixturesImplementation 'org.apache.logging.log4j:log4j-core'
+}

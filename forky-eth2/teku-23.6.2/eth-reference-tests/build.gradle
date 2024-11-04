@@ -1,0 +1,46 @@
+jar { enabled = false }
+
+dependencies {
+  referenceTestImplementation project(':beacon:validator')
+  referenceTestImplementation project(':ethereum:networks')
+  referenceTestImplementation project(':ethereum:spec')
+  referenceTestImplementation testFixtures(project(':ethereum:spec'))
+  referenceTestImplementation testFixtures(project(':ethereum:statetransition'))
+  referenceTestImplementation project(':ethereum:statetransition')
+  referenceTestImplementation project(':eth-tests')
+  referenceTestImplementation project(':infrastructure:bls')
+  referenceTestImplementation project(':infrastructure:serviceutils')
+  referenceTestImplementation project(':infrastructure:ssz')
+  referenceTestImplementation testFixtures(project(':infrastructure:ssz'))
+  referenceTestImplementation project(':storage')
+  referenceTestImplementation testFixtures(project(':storage'))
+  referenceTestImplementation project(':infrastructure:async')
+  referenceTestImplementation testFixtures(project(':infrastructure:async'))
+  referenceTestImplementation testFixtures(project(':infrastructure:metrics'))
+  referenceTestImplementation project(':infrastructure:time')
+
+  referenceTestImplementation 'org.hyperledger.besu:plugin-api'
+  referenceTestImplementation 'com.fasterxml.jackson.core:jackson-databind'
+  referenceTestImplementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
+  referenceTestImplementation 'org.apache.tuweni:tuweni-bytes'
+  referenceTestImplementation 'org.apache.tuweni:tuweni-junit'
+  referenceTestImplementation 'org.apache.tuweni:tuweni-ssz'
+  referenceTestImplementation 'org.xerial.snappy:snappy-java'
+}
+
+task cleanReferenceTestClasses(type: Delete) {
+  delete project.file('src/referenceTest/generated')
+  delete project.file('src/referenceTest/generated_tests')
+}
+
+task generateReferenceTestClasses(type: JavaExec) {
+  dependsOn(cleanReferenceTestClasses)
+  group = "Execution"
+  description = "Generate reference test classes"
+  classpath = project.project(':eth-tests').sourceSets.referenceTest.runtimeClasspath
+  mainClass = 'tech.pegasys.teku.ethtests.ReferenceTestGenerator'
+  args = [project.file('src/referenceTest/generated_tests').absolutePath]
+  systemProperty("teku.ref-test-module.path", project.file("../eth-reference-tests").absolutePath)
+}
+
+//compileReferenceTestJava.dependsOn(generateReferenceTestClasses)

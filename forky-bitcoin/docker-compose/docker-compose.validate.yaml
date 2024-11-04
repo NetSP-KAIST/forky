@@ -1,0 +1,12 @@
+version: '3.0'
+services: 
+  validation:
+    container_name: validation
+    image: ubuntu-validation
+    working_dir: /validation
+    privileged: true
+    command: sh -c "chmod +x /validation/validate.js && node /validation/validate.js"
+    volumes:
+      - ./results:/validation/results
+      - ./test_cases:/validation/test_cases
+      - ../../log:/log/

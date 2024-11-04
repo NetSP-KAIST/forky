@@ -1,0 +1,7 @@
+FROM ubuntu-bcoin:base
+LABEL email="forky.blockchain@gmail.com"
+LABEL description="Validation environment"
+COPY package.json /validation/
+WORKDIR /validation
+RUN npm install
+COPY validate.js /validation/

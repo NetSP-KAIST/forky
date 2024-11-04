@@ -1,0 +1,53 @@
+[package]
+name = "targets"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[features]
+milagro = ["bls/milagro"]
+fake_crypto = ["bls/fake_crypto"]
+
+[dependencies]
+lazy_static = "1.4.0"
+walkdir = "2.3.2"
+eth2_ssz = { path = "../../lighthouse/consensus/ssz/"}
+bls = { path = "../../lighthouse/crypto/bls/"}
+eth2_ssz_derive = { path = "../../lighthouse/consensus/ssz_derive/" }
+state_processing = { path = "../../lighthouse/consensus/state_processing/" }
+fs2 = "0.4.3"
+hex = "0.4.2"
+rayon = "1.4.1"
+serde = "1.0.116"
+serde_derive = "1.0.116"
+serde_repr = "0.1.6"
+serde_yaml = "0.8.13"
+beacon_chain = { path = "../../lighthouse/beacon_node/beacon_chain" }
+store = { path = "../../lighthouse/beacon_node/store" }
+fork_choice = { path = "../../lighthouse/consensus/fork_choice" }
+execution_layer = { path = "../../lighthouse/beacon_node/execution_layer" }
+types = { path = "../../lighthouse/consensus/types" }
+tokio = "1.26.0"
+tokio-util = { version = "0.7.7", features = ["codec", "compat"] }
+snap = "1.0.1"
+sha1 = "0.10.5"
+tree_hash = { version = "0.4.1", features = ["arbitrary"] }
+tree_hash_derive = "0.4.0"
+
+[dependencies.libp2p]
+version = "0.50.0"
+default-features = false
+features = ["websocket", "identify", "mplex", "yamux", "noise", "gossipsub", "dns", "tcp", "tokio", "plaintext", "secp256k1", "macros", "ecdsa"]
+
+[patch]
+[patch.crates-io]
+# warp = { git = "https://github.com/macladson/warp", rev="7e75acc368229a46a236a8c991bf251fe7fe50ef" }
+eth2_ssz = { path = "../../lighthouse/consensus/ssz" }
+eth2_ssz_derive = { path = "../../lighthouse/consensus/ssz_derive" }
+eth2_ssz_types = { path = "../../lighthouse/consensus/ssz_types" }
+eth2_hashing = { path = "../../lighthouse/crypto/eth2_hashing" }
+tree_hash = { path = "../../lighthouse/consensus/tree_hash" }
+tree_hash_derive = { path = "../../lighthouse/consensus/tree_hash_derive" }
+eth2_serde_utils = { path = "../../lighthouse/consensus/serde_utils" }
+arbitrary = { git = "https://github.com/michaelsproul/arbitrary", rev="a572fd8743012a4f1ada5ee5968b1b3619c427ba" }

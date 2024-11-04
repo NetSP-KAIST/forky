@@ -1,0 +1,32 @@
+run:
+  skip-files:
+    - validator/web/site_data.go
+    - .*_test.go
+  skip-dirs:
+    - proto
+    - tools/analyzers
+  timeout: 10m
+  go: '1.19'
+
+linters:
+  disable-all: true
+  enable:
+    - gofmt
+    - goimports
+    - unused
+    - errcheck
+    - gosimple
+    - gocognit
+    - dupword
+    - nilerr
+    - whitespace
+    - misspell
+
+linters-settings:
+  gocognit:
+    # TODO: We should target for < 50
+    min-complexity: 65
+
+output:
+  print-issued-lines: true
+  sort-results: true

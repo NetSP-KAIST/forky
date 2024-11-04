@@ -1,0 +1,16 @@
+dependencies {
+  api 'org.bouncycastle:bcprov-jdk15on'
+
+  implementation 'org.apache.tuweni:tuweni-bytes'
+  implementation 'org.apache.tuweni:tuweni-ssz'
+  implementation 'commons-io:commons-io'
+  implementation 'tech.pegasys:jblst'
+  implementation project(':infrastructure:crypto')
+  implementation project(':infrastructure:logging')
+
+  testImplementation('com.googlecode.json-simple:json-simple') {
+      exclude group: 'junit', module: 'junit'
+  }
+
+  testFixturesImplementation 'org.apache.tuweni:tuweni-bytes'
+}

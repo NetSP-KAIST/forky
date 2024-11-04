@@ -1,0 +1,22 @@
+{
+  "name": "fuzz-bcoin",
+  "version": "1.0.0",
+  "description": "Bcoin v2.2.0 fuzzer",
+  "main": "main.js",
+  "dependencies": {
+    "bcoin": "git+https://github.com/bcoin-org/bcoin.git#semver:~2.2.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/forky-anonymized/fuzz-bcoin.git"
+  },
+  "author": "forky-anonymized",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/forky-anonymized/fuzz-bcoin/issues"
+  },
+  "homepage": "https://github.com/forky-anonymized/fuzz-bcoin#readme"
+}

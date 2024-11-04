@@ -1,0 +1,116 @@
+[workspace]
+members = [
+    "account_manager",
+
+    "beacon_node",
+    "beacon_node/beacon_chain",
+    "beacon_node/builder_client",
+    "beacon_node/client",
+    "beacon_node/eth1",
+    "beacon_node/lighthouse_network",
+    "beacon_node/execution_layer",
+    "beacon_node/http_api",
+    "beacon_node/http_metrics",
+    "beacon_node/network",
+    "beacon_node/store",
+    "beacon_node/timer",
+
+    "boot_node",
+
+    "common/account_utils",
+    "common/clap_utils",
+    "common/compare_fields",
+    "common/compare_fields_derive",
+    "common/deposit_contract",
+    "common/directory",
+    "common/eth2",
+    "common/eth2_config",
+    "common/eth2_interop_keypairs",
+    "common/eth2_network_config",
+    "common/eth2_wallet_manager",
+    "common/lighthouse_metrics",
+    "common/lighthouse_version",
+    "common/lockfile",
+    "common/logging",
+    "common/lru_cache",
+    "common/malloc_utils",
+    "common/oneshot_broadcast",
+    "common/sensitive_url",
+    "common/slot_clock",
+    "common/system_health",
+    "common/task_executor",
+    "common/target_check",
+    "common/test_random_derive",
+    "common/unused_port",
+    "common/validator_dir",
+    "common/warp_utils",
+    "common/monitoring_api",
+
+    "database_manager",
+
+    "consensus/cached_tree_hash",
+    "consensus/int_to_bytes",
+    "consensus/fork_choice",
+    "consensus/proto_array",
+    "consensus/safe_arith",
+    "consensus/ssz",
+    "consensus/ssz_derive",
+    "consensus/ssz_types",
+    "consensus/serde_utils",
+    "consensus/state_processing",
+    "consensus/swap_or_not_shuffle",
+    "consensus/tree_hash",
+    "consensus/tree_hash_derive",
+
+    "crypto/bls",
+    "crypto/eth2_hashing",
+    "crypto/eth2_key_derivation",
+    "crypto/eth2_keystore",
+    "crypto/eth2_wallet",
+
+    "lcli",
+
+    "lighthouse",
+    "lighthouse/environment",
+
+    "slasher",
+    "slasher/service",
+
+    "testing/ef_tests",
+    "testing/eth1_test_rig",
+    "testing/execution_engine_integration",
+    "testing/node_test_rig",
+    "testing/simulator",
+    "testing/test-test_logger",
+    "testing/state_transition_vectors",
+    "testing/web3signer_tests",
+
+    "validator_client",
+    "validator_client/slashing_protection",
+]
+resolver = "2"
+
+[patch]
+[patch.crates-io]
+warp = { git = "https://github.com/macladson/warp", rev="7e75acc368229a46a236a8c991bf251fe7fe50ef" }
+eth2_ssz = { path = "consensus/ssz" }
+eth2_ssz_derive = { path = "consensus/ssz_derive" }
+eth2_ssz_types = { path = "consensus/ssz_types" }
+eth2_hashing = { path = "crypto/eth2_hashing" }
+tree_hash = { path = "consensus/tree_hash" }
+tree_hash_derive = { path = "consensus/tree_hash_derive" }
+eth2_serde_utils = { path = "consensus/serde_utils" }
+arbitrary = { git = "https://github.com/michaelsproul/arbitrary", rev="a572fd8743012a4f1ada5ee5968b1b3619c427ba" }
+
+[patch."https://github.com/ralexstokes/mev-rs"]
+mev-rs = { git = "https://github.com/ralexstokes//mev-rs", rev = "7813d4a4a564e0754e9aaab2d95520ba437c3889" }
+[patch."https://github.com/ralexstokes/ethereum-consensus"]
+ethereum-consensus = { git = "https://github.com/ralexstokes//ethereum-consensus", rev = "9b0ee0a8a45b968c8df5e7e64ea1c094e16f053d" }
+[patch."https://github.com/ralexstokes/ssz-rs"]
+ssz-rs = { git = "https://github.com/ralexstokes//ssz-rs", rev = "adf1a0b14cef90b9536f28ef89da1fab316465e1" }
+
+[profile.maxperf]
+inherits = "release"
+lto = "fat"
+codegen-units = 1
+incremental = false

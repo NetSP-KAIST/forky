@@ -1,0 +1,14 @@
+{
+  "name": "validation",
+  "version": "1.0.0",
+  "description": "Validation for Bitcoin Consensus Fuzzer",
+  "main": "validate.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "forky-anonymized",
+  "license": "ISC",
+  "dependencies": {
+
+  }
+}

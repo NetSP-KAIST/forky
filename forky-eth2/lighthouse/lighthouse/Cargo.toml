@@ -1,0 +1,75 @@
+[package]
+name = "lighthouse"
+version = "3.5.1"
+authors = ["Sigma Prime <contact@sigmaprime.io>"]
+edition = "2021"
+autotests = false
+rust-version = "1.65"
+
+[features]
+default = ["slasher-mdbx"]
+# Writes debugging .ssz files to /tmp during block processing.
+write_ssz_files = ["beacon_node/write_ssz_files"]
+# Compiles the BLS crypto code so that the binary is portable across machines.
+portable = ["bls/supranational-portable"]
+# Compiles BLST so that it always uses ADX instructions.
+modern = ["bls/supranational-force-adx"]
+# Uses the slower Milagro BLS library, which is written in native Rust.
+milagro = ["bls/milagro"]
+# Support minimal spec (used for testing only).
+spec-minimal = []
+# Support Gnosis spec and Gnosis Beacon Chain.
+gnosis = []
+# Support slasher MDBX backend.
+slasher-mdbx = ["slasher/mdbx"]
+# Support slasher LMDB backend.
+slasher-lmdb = ["slasher/lmdb"]
+# Use jemalloc.
+jemalloc = ["malloc_utils/jemalloc"]
+
+[dependencies]
+beacon_node = { "path" = "../beacon_node" }
+slog = { version = "2.5.2", features = ["max_level_trace"] }
+sloggers = { version = "2.1.1", features = ["json"] }
+types = { "path" = "../consensus/types" }
+bls = { path = "../crypto/bls" }
+eth2_hashing = "0.3.0"
+clap = "2.33.3"
+env_logger = "0.9.0"
+environment = { path = "./environment" }
+boot_node = { path = "../boot_node" }
+futures = "0.3.7"
+validator_client = { "path" = "../validator_client" }
+account_manager = { "path" = "../account_manager" }
+clap_utils = { path = "../common/clap_utils" }
+eth2_network_config = { path = "../common/eth2_network_config" }
+lighthouse_version = { path = "../common/lighthouse_version" }
+account_utils = { path = "../common/account_utils" }
+lighthouse_metrics = { path = "../common/lighthouse_metrics" }
+lazy_static = "1.4.0"
+serde = { version = "1.0.116", features = ["derive"] }
+serde_json = "1.0.59"
+serde_yaml = "0.8.13"
+task_executor = { path = "../common/task_executor" }
+malloc_utils = { path = "../common/malloc_utils" }
+directory = { path = "../common/directory" }
+unused_port = { path = "../common/unused_port" }
+database_manager = { path = "../database_manager" }
+slasher = { path = "../slasher", default-features = false }
+
+[dev-dependencies]
+tempfile = "3.1.0"
+validator_dir = { path = "../common/validator_dir" }
+slashing_protection = { path = "../validator_client/slashing_protection" }
+lighthouse_network = { path = "../beacon_node/lighthouse_network" }
+sensitive_url = { path = "../common/sensitive_url" }
+eth1 = { path = "../beacon_node/eth1" }
+
+[[test]]
+name = "lighthouse_tests"
+path = "tests/main.rs"
+
+# Prevent cargo-udeps from flagging the dummy package `target_check`, which exists only
+# to assert properties of the compilation target.
+[package.metadata.cargo-udeps.ignore]
+normal = ["target_check"]

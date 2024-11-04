@@ -1,0 +1,20 @@
+dependencies {
+    implementation project(':ethereum:networks')
+    implementation project(':ethereum:spec')
+    implementation testFixtures(project(':ethereum:spec'))
+    implementation project(':infrastructure:bls')
+    implementation project(':infrastructure:ssz')
+
+    implementation 'org.apache.tuweni:tuweni-bytes'
+    implementation 'it.unimi.dsi:fastutil'
+
+    testImplementation 'org.xerial.snappy:snappy-java'
+    testImplementation testFixtures(project(':ethereum:spec'))
+}
+
+
+task fuzzDist(type: Copy) {
+    dependsOn([jar])
+    from configurations.runtimeClasspath + configurations.runtimeClasspath.allArtifacts.collect { it.file }
+    destinationDir file("$buildDir/fuzzDist")
+}

@@ -1,0 +1,17 @@
+{
+  "title" : "SignerDefinition",
+  "type" : "object",
+  "required" : [ "pubkey", "readonly" ],
+  "properties" : {
+    "pubkey" : {
+      "$ref" : "#/components/schemas/Pubkey"
+    },
+    "url" : {
+      "$ref" : "#/components/schemas/Signer"
+    },
+    "readonly" : {
+      "type" : "boolean",
+      "description" : "Whether the validator can be modified"
+    }
+  }
+}

@@ -1,0 +1,12 @@
+[package]
+name = "int_to_bytes"
+version = "0.2.0"
+authors = ["Paul Hauner <paul@paulhauner.com>"]
+edition = "2021"
+
+[dependencies]
+bytes = "1.0.1"
+
+[dev-dependencies]
+yaml-rust = "0.4.4"
+hex = "0.4.2"

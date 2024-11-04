@@ -1,0 +1,29 @@
+FROM ubuntu:18.04
+LABEL email="forky.blockchain.anonymized.for.submission@gmail.com" description="Docker environment for Bitcoin base environment with llvm & clang"
+
+COPY FuzzedDataProvider.h /code/FuzzedDataProvider.h
+COPY Parser.h /code/Parser.h
+COPY Parser.cpp /code/Parser.cpp
+COPY json.hpp /code/json.hpp
+COPY Mutator.h /code/Mutator.h
+RUN apt-get update\
+ && apt-get -y install --no-install-recommends software-properties-common \
+ && add-apt-repository ppa:ubuntu-toolchain-r/test \
+ && apt-get update \
+ && apt-get -y install --no-install-recommends\
+    lsb-release software-properties-common\
+    gcc g++ build-essential libtool autotools-dev\
+    automake pkg-config bsdmainutils python3\
+    libevent-dev libboost-dev libboost-system-dev\
+    libboost-filesystem-dev libboost-test-dev\
+    libsqlite3-dev libzmq3-dev libboost-thread-dev\
+    curl tar wget gpg-agent\
+    gcc-9 g++-9 \
+ && rm -rf /var/lib/apt/lists/* \
+ && curl -LO https://apt.llvm.org/llvm.sh \
+ && chmod +x llvm.sh \
+ && ./llvm.sh 17 \
+ && rm -rf /var/lib/apt/lists/* \
+ && rm ./llvm.sh
+
+WORKDIR /

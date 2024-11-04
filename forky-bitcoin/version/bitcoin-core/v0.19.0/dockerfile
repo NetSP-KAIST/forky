@@ -1,0 +1,64 @@
+FROM ubuntu-bitcoin:base
+LABEL email="forky.blockchain.anonymized.for.submission@gmail.com" description="Docker environment for Bitcoin v19.0"
+COPY block.cpp /code/block.cpp
+COPY coins.h /code/coins.h
+COPY chain.h /code/chain.h
+COPY txmempool.h /code/txmempool.h
+COPY validation.cpp /code/validataion.cpp
+COPY validation.h /code/validataion.h
+COPY consensus.validation.h /code/consensus.validataion.h
+COPY Makefile.test.include /code/Makefile.test.include 
+COPY validationinterface.cpp /code/validationinterface.cpp
+COPY time.cpp /code/time.cpp
+# COPY configure /code/configure
+# RUN apt-get update
+# RUN apt-get install -y lsb-release software-properties-common
+# RUN apt-get clean all
+# RUN apt-get install -y curl tar wget
+# RUN curl -LO https://apt.llvm.org/llvm.sh
+# RUN chmod +x llvm.sh
+# RUN ./llvm.sh 13
+# ENV clang /usr/bin/clang-17
+# ENV clang++ /usr/bin/clang++-17
+RUN apt-get update \
+ && apt-get -y install --no-install-recommends \
+    libssl-dev doxygen \
+    libboost-all-dev \
+ && rm -rf /var/lib/apt/lists/* \
+ && curl -LO https://github.com/bitcoin/bitcoin/archive/refs/tags/v0.19.0.tar.gz \
+ && tar -zxvf v0.19.0.tar.gz \
+ && mv bitcoin-0.19.0 bitcoin \
+ && rm /v0.19.0.tar.gz \
+ && mv /bitcoin/src/Makefile.test.include /bitcoin/src/Makefile.test.include.old \
+#  && mv /bitcoin/configure /bitcoin/configure.old \
+ && mkdir -p /bitcoin/src/test/fuzz \
+ && mv /bitcoin/src/coins.h /bitcoin/src/coins.h.old \
+ && mv /bitcoin/src/chain.h /bitcoin/src/chain.h.old \
+ && mv /bitcoin/src/txmempool.h /bitcoin/src/txmempool.old \
+ && mv /bitcoin/src/validation.cpp /bitcoin/src/validation.cpp.old \
+ && mv /bitcoin/src/validation.h /bitcoin/src/validation.h.old \
+ && mv /bitcoin/src/consensus/validation.h /bitcoin/src/consensus/validation.h.old \
+ && mv /bitcoin/src/validationinterface.cpp /bitcoin/src/validationinterface.cpp.old \
+ && mv /bitcoin/src/util/time.cpp /bitcoin/src/util/time.cpp.old \
+ && cp /code/block.cpp /bitcoin/src/test/fuzz/block.cpp \
+ && cp /code/FuzzedDataProvider.h /bitcoin/src/test/fuzz/FuzzedDataProvider.h \
+ && cp /code/Parser.h /bitcoin/src/test/fuzz/Parser.h \
+ && cp /code/Parser.cpp /bitcoin/src/test/fuzz/Parser.cpp \
+ && cp /code/Mutator.h /bitcoin/src/test/fuzz/Mutator.h \
+ && cp /code/coins.h /bitcoin/src/coins.h \
+ && cp /code/chain.h /bitcoin/src/chain.h \
+ && cp /code/txmempool.h /bitcoin/src/txmempool.h \
+ && cp /code/validataion.cpp /bitcoin/src/validation.cpp \
+ && cp /code/validataion.h /bitcoin/src/validation.h \
+ && cp /code/consensus.validataion.h /bitcoin/src/consensus/validation.h \
+ && cp /code/json.hpp /bitcoin/src/test/fuzz/json.hpp \
+ && cp /code/Makefile.test.include /bitcoin/src/Makefile.test.include \
+ && cp /code/validationinterface.cpp /bitcoin/src/validationinterface.cpp \
+ && cp /code/time.cpp /bitcoin/src/util/time.cpp \
+#  && cp /code/configure /bitcoin/configure \
+ && cd /bitcoin \
+ && ./autogen.sh \
+ && CC=/usr/bin/clang-17 CXX=/usr/bin/clang++-17 \
+    ./configure --enable-fuzz --with-sanitizers=address,fuzzer,undefined \
+ && make -j 8
+WORKDIR /bitcoin

@@ -1,0 +1,55 @@
+FROM ubuntu-bitcoin:base
+LABEL email="forky.blockchain.anonymized.for.submission@gmail.com"
+LABEL description="Docker environment for Bitcoin v23.0"
+# get bitcoin client
+COPY block.cpp /code/block.cpp
+COPY coins.h /code/coins.h
+COPY chain.h /code/chain.h
+# COPY pow.cpp /code/pow.cpp
+COPY txmempool.h /code/txmempool.h
+COPY validation.cpp /code/validataion.cpp
+COPY validation.h /code/validataion.h
+COPY Makefile.test_fuzz.include /code/Makefile.test_fuzz.include
+COPY chainparams.cpp /code/chainparams.cpp
+COPY blockstorage.h /code/blockstorage.h
+COPY validationinterface.cpp /code/validationinterface.cpp
+COPY time.cpp /code/time.cpp
+RUN curl -LO https://github.com/bitcoinknots/bitcoin/archive/refs/tags/v23.0.knots20220529.tar.gz  \
+ && mv v23.0.knots20220529.tar.gz bitcoin-23.0.tar.gz \
+ && tar -zxvf bitcoin-23.0.tar.gz \
+ && mv /bitcoin-23.0.knots20220529 /bitcoin \
+ && rm /bitcoin-23.0.tar.gz \
+ && mv /bitcoin/src/test/fuzz/block.cpp /bitcoin/src/test/fuzz/block.cpp.old \
+ && mv /bitcoin/src/coins.h /bitcoin/src/coins.h.old \
+ && mv /bitcoin/src/chain.h /bitcoin/src/chain.h.old \
+#  && mv /bitcoin/src/pow.cpp /bitcoin/src/pow.cpp.old \
+ && mv /bitcoin/src/txmempool.h /bitcoin/src/txmempool.old \
+ && mv /bitcoin/src/validation.cpp /bitcoin/src/validation.cpp.old \
+ && mv /bitcoin/src/validation.h /bitcoin/src/validation.h.old \
+ && mv /bitcoin/src/Makefile.test_fuzz.include /bitcoin/src/Makefile.test_fuzz.include.old \
+ && mv /bitcoin/src/chainparams.cpp /bitcoin/src/chainparams.cpp.old \
+ && mv /bitcoin/src/node/blockstorage.h /bitcoin/src/node/blockstorage.h.old \
+ && mv /bitcoin/src/validationinterface.cpp /bitcoin/src/validationinterface.cpp.old \
+ && mv /bitcoin/src/util/time.cpp /bitcoin/src/util/time.cpp.old \
+ && cp /code/block.cpp /bitcoin/src/test/fuzz/block.cpp \
+ && cp /code/FuzzedDataProvider.h /bitcoin/src/test/fuzz/FuzzedDataProvider.h \
+ && cp /code/Parser.h /bitcoin/src/test/fuzz/Parser.h \
+ && cp /code/Parser.cpp /bitcoin/src/test/fuzz/Parser.cpp \
+ && cp /code/Mutator.h /bitcoin/src/test/fuzz/Mutator.h \
+ && cp /code/coins.h /bitcoin/src/coins.h \
+ && cp /code/chain.h /bitcoin/src/chain.h \
+ && cp /code/txmempool.h /bitcoin/src/txmempool.h \
+ && cp /code/validataion.cpp /bitcoin/src/validation.cpp \
+ && cp /code/validataion.h /bitcoin/src/validation.h \
+ && cp /code/json.hpp /bitcoin/src/test/fuzz/json.hpp \
+ && cp /code/Makefile.test_fuzz.include /bitcoin/src/Makefile.test_fuzz.include \
+ && cp /code/chainparams.cpp /bitcoin/src/chainparams.cpp \
+ && cp /code/blockstorage.h /bitcoin/src/node/blockstorage.h \
+ && cp /code/validationinterface.cpp /bitcoin/src/validationinterface.cpp \
+ && cp /code/time.cpp /bitcoin/src/util/time.cpp \
+ && cd /bitcoin \
+ && ./autogen.sh \
+ && CC=/usr/bin/clang-13 CXX=/usr/bin/clang++-13 \
+    ./configure --enable-fuzz --with-sanitizers=address,fuzzer,undefined \
+ && make -j 8
+WORKDIR /bitcoin

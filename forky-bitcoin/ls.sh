@@ -1,0 +1,36 @@
+ROUND=$1
+
+echo "Total test cases"
+ls output/r$ROUND/test_cases | wc -l
+
+echo "Result files"
+printf "  bitcoin 23.0.0: %d\n" $(ls output/r$ROUND/results/bitcoin/23.0.0/ | wc -l)
+printf "  bitcoin 22.0.0: %d\n" $(ls output/r$ROUND/results/bitcoin/22.0.0/ | wc -l)
+printf "  bitcoin 0.21.2: %d\n" $(ls output/r$ROUND/results/bitcoin/0.21.2/ | wc -l)
+printf "  bitcoin 0.21.1: %d\n" $(ls output/r$ROUND/results/bitcoin/0.21.1/ | wc -l)
+printf "  bitcoin 0.21.0: %d\n" $(ls output/r$ROUND/results/bitcoin/0.21.0/ | wc -l)
+printf "  bitcoin 0.20.1: %d\n" $(ls output/r$ROUND/results/bitcoin/0.20.1/ | wc -l)
+printf "  bitcoin 0.20.0: %d\n" $(ls output/r$ROUND/results/bitcoin/0.20.0/ | wc -l)
+printf "  bitcoin 0.19.1: %d\n" $(ls output/r$ROUND/results/bitcoin/0.19.1/ | wc -l)
+printf "  bitcoin 0.19.0.1: %d\n" $(ls output/r$ROUND/results/bitcoin/0.19.0.1/ | wc -l)
+printf "  bitcoin 0.19.0: %d\n" $(ls output/r$ROUND/results/bitcoin/0.19.0/ | wc -l)
+printf "  bitcoin 0.18.1: %d\n" $(ls output/r$ROUND/results/bitcoin/0.18.1/ | wc -l)
+printf "  bitcoin 0.18.0: %d\n" $(ls output/r$ROUND/results/bitcoin/0.18.0/ | wc -l)
+printf "  bitcoin 0.17.1: %d\n" $(ls output/r$ROUND/results/bitcoin/0.17.1/ | wc -l)
+printf "  bitcoin 0.17.0.1: %d\n" $(ls output/r$ROUND/results/bitcoin/0.17.0.1/ | wc -l)
+printf "  bitcoin 0.17.0: %d\n" $(ls output/r$ROUND/results/bitcoin/0.17.0/ | wc -l)
+printf "  bitcoin 0.16.3: %d\n" $(ls output/r$ROUND/results/bitcoin/0.16.3/ | wc -l)
+printf "  bitcoin 0.16.2: %d\n" $(ls output/r$ROUND/results/bitcoin/0.16.2/ | wc -l)
+printf "  bitcoin 0.16.1: %d\n" $(ls output/r$ROUND/results/bitcoin/0.16.1/ | wc -l)
+printf "  bitcoin 0.16.0: %d\n" $(ls output/r$ROUND/results/bitcoin/0.16.0/ | wc -l)
+printf "  bitcoin 0.15.2: %d\n" $(ls output/r$ROUND/results/bitcoin/0.15.2/ | wc -l)
+printf "  bitcoin 0.15.1: %d\n" $(ls output/r$ROUND/results/bitcoin/0.15.1/ | wc -l)
+printf "  bitcoin 0.15.0: %d\n" $(ls output/r$ROUND/results/bitcoin/0.15.0/ | wc -l)
+printf "  knots 23.0.0: %d\n" $(ls output/r$ROUND/results/knots/23.0.0/ | wc -l)
+printf "  knots 22.0.0: %d\n" $(ls output/r$ROUND/results/knots/22.0.0/ | wc -l)
+printf "  btcd 0.23.1: %d\n" $(ls output/r$ROUND/results/btcd/0.23.1/ | wc -l)
+printf "  btcd 0.23.0: %d\n" $(ls output/r$ROUND/results/btcd/0.23.0/ | wc -l)
+printf "  btcd 0.22.1: %d\n" $(ls output/r$ROUND/results/btcd/0.22.1/ | wc -l)
+printf "  bcoin 2.2.0: %d\n" $(ls output/r$ROUND/results/bcoin/2.2.0/ | wc -l)
+printf "  bcoin 2.1.0: %d\n" $(ls output/r$ROUND/results/bcoin/2.1.0/ | wc -l)
+printf "  bcoin 2.0.0: %d\n" $(ls output/r$ROUND/results/bcoin/2.0.0/ | wc -l)

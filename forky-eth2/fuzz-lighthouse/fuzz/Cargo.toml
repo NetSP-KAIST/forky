@@ -1,0 +1,78 @@
+[package]
+name = "fuzz-lighthouse-fuzz"
+version = "0.0.0"
+publish = false
+edition = "2021"
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4.6"
+walkdir = "2.3.2"
+lazy_static = "1.4.0"
+rand = "0.8.5"
+targets = { path="../targets" }
+eth2_ssz = { path = "../../lighthouse/consensus/ssz/" }
+eth2_ssz_derive = { path = "../../lighthouse/consensus/ssz_derive/" }
+state_processing = { path = "../../lighthouse/consensus/state_processing/", features = ["arbitrary-fuzz"]}
+beacon_chain = { path = "../../lighthouse/beacon_node/beacon_chain" }
+store = { path = "../../lighthouse/beacon_node/store" }
+fork_choice = { path = "../../lighthouse/consensus/fork_choice" }
+execution_layer = { path = "../../lighthouse/beacon_node/execution_layer" }
+types = { path = "../../lighthouse/consensus/types", features = ["arbitrary-fuzz"]}
+serde = "1.0.116"
+serde_derive = "1.0.116"
+serde_repr = "0.1.6"
+serde_yaml = "0.8.13"
+test_random_derive = { path = "../../lighthouse/common/test_random_derive" }
+rand_xorshift = "0.3.0"
+tree_hash = { version = "0.4.1", features = ["arbitrary"] }
+tree_hash_derive = "0.4.0"
+futures = "0.3.28"
+snap = "1.0.1"
+sha1 = "0.10.5"
+hex = "0.4.3"
+eth2_interop_keypairs = { path = "../../lighthouse/common/eth2_interop_keypairs" }
+num-traits = "0.2.15"
+num-bigint = "0.4.2"
+bls = { path = "../../lighthouse/crypto/bls" }
+eth2_hashing = "0.3.0"
+
+[patch]
+[patch.crates-io]
+# warp = { git = "https://github.com/macladson/warp", rev="7e75acc368229a46a236a8c991bf251fe7fe50ef" }
+eth2_ssz = { path = "../../lighthouse/consensus/ssz" }
+eth2_ssz_derive = { path = "../../lighthouse/consensus/ssz_derive" }
+eth2_ssz_types = { path = "../../lighthouse/consensus/ssz_types" }
+eth2_hashing = { path = "../../lighthouse/crypto/eth2_hashing" }
+tree_hash = { path = "../../lighthouse/consensus/tree_hash" }
+tree_hash_derive = { path = "../../lighthouse/consensus/tree_hash_derive" }
+eth2_serde_utils = { path = "../../lighthouse/consensus/serde_utils" }
+arbitrary = { git = "https://github.com/michaelsproul/arbitrary", rev="a572fd8743012a4f1ada5ee5968b1b3619c427ba" }
+
+[patch."https://github.com/ralexstokes/mev-rs"]
+mev-rs = { git = "https://github.com/ralexstokes//mev-rs", rev = "7813d4a4a564e0754e9aaab2d95520ba437c3889" }
+[patch."https://github.com/ralexstokes/ethereum-consensus"]
+ethereum-consensus = { git = "https://github.com/ralexstokes//ethereum-consensus", rev = "9b0ee0a8a45b968c8df5e7e64ea1c094e16f053d" }
+[patch."https://github.com/ralexstokes/ssz-rs"]
+ssz-rs = { git = "https://github.com/ralexstokes//ssz-rs", rev = "adf1a0b14cef90b9536f28ef89da1fab316465e1" }
+
+# Prevent this from interfering with workspaces
+[workspace]
+members = ["."]
+
+[profile.release]
+debug = 1
+
+[[bin]]
+name = "block"
+path = "fuzz_targets/block.rs"
+test = false
+doc = false
+
+[[bin]]
+name = "fc"
+path = "fuzz_targets/fork_choice.rs"
+test = false
+doc = false

@@ -1,0 +1,13 @@
+FROM ubuntu:18.04
+LABEL email="forky.blockchain@gmail.com"
+LABEL description="Docker environment for Bcoin base"
+RUN apt-get update\
+ && apt-get -y install --no-install-recommends\
+ ca-certificates curl npm\
+ && npm update -g npm\
+ && npm cache clean -f\
+ && npm install -g n\
+ && n 10.24.1\
+ && apt-get -y install --no-install-recommends\
+ git python3 gcc g++ build-essential
+

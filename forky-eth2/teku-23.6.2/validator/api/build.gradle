@@ -1,0 +1,21 @@
+dependencies {
+  implementation project(':infrastructure:async')
+  implementation project(':infrastructure:bls')
+  implementation project(':infrastructure:bytes')
+  implementation project(':infrastructure:events')
+  implementation project(':infrastructure:exceptions')
+  implementation project(':ethereum:execution-types')
+  implementation project(':ethereum:json-types')
+  implementation project(':ethereum:spec')
+  implementation project(':data:serializer')
+
+  testImplementation testFixtures(project(':infrastructure:bls'))
+  testImplementation testFixtures(project(':infrastructure:logging'))
+  testImplementation testFixtures(project(':ethereum:spec'))
+}
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) { artifactId 'validator-api' }
+  }
+}

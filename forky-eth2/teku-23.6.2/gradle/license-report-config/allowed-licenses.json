@@ -1,0 +1,230 @@
+{
+  "allowedLicenses": [
+    {
+      "moduleLicense": "Apache License, Version 2.0",
+      "moduleName": ".*"
+    },
+    {
+      "moduleLicense": "BSD Zero Clause License",
+      "moduleName": ".*"
+    },
+    {
+      "moduleLicense": "Bouncy Castle Licence",
+      "moduleName": ".*"
+    },
+    {
+      "moduleLicense": "CDDL/GPLv2+CE",
+      "moduleName": ".*"
+    },
+    {
+      "moduleLicense": "COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0",
+      "moduleName": ".*"
+    },
+    {
+      "moduleLicense": "COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.1",
+      "moduleName": ".*"
+    },
+    {
+      "moduleLicense": "Creative Commons Legal Code",
+      "moduleName": ".*"
+    },
+    {
+      "moduleLicense": "Eclipse Distribution License - v 1.0",
+      "moduleName": ".*"
+    },
+    {
+      "moduleLicense": "Eclipse Public License - v 1.0",
+      "moduleName": ".*"
+    },
+    {
+      "moduleLicense": "Eclipse Public License - v 2.0",
+      "moduleName": ".*"
+    },
+    {
+      "moduleLicense": "MIT License",
+      "moduleName": ".*"
+    },
+    {
+      "moduleLicense": "MIT-0",
+      "moduleName": ".*"
+    },
+    {
+      "moduleLicense": "Mozilla Public License, Version 2.0",
+      "moduleName": ".*"
+    },
+    {
+      "moduleLicense": "The 2-Clause BSD License",
+      "moduleName": ".*"
+    },
+    {
+      "moduleLicense": "The 3-Clause BSD License",
+      "moduleName": ".*"
+    },
+    {
+      "moduleLicense": "The BSD License",
+      "moduleName": ".*"
+    },
+    {
+      "moduleLicense": "The JSON License",
+      "moduleName": "org.json:json"
+    },
+    {
+      "moduleName": "io.libp2p:jvm-libp2p-minimal"
+    },
+    {
+      "moduleName": "com.squareup.okio:okio"
+    },
+    {
+      "moduleName": "com.google.guava:guava-parent"
+    }
+  ],
+  "overrideLicenses" : [
+    {
+      "moduleName": "com.github.fge",
+      "moduleLicense": "Apache License, Version 2.0"
+    },
+    {
+      "moduleName": "com.github.java-json-tools",
+      "moduleLicense": "Apache License, Version 2.0"
+    },
+    {
+      "moduleName": "com.github.jnr:jnr-posix",
+      "moduleLicense": "Eclipse Public License - v 2.0"
+    },
+    {
+      "moduleName": "com.github.oshi:oshi-core-java11",
+      "moduleLicense": "MIT License"
+    },
+    {
+      "moduleName": "com.github.oshi:oshi-core",
+      "moduleLicense": "MIT License"
+    },
+    {
+      "moduleName": "com.google.code.gson:gson",
+      "moduleLicense": "Apache License, Version 2.0"
+    },
+    {
+      "moduleName": "io.libp2p:jvm-libp2p-minimal",
+      "moduleLicense": "Apache License, Version 2.0",
+      "moduleLicenseUrl": "https://github.com/libp2p/jvm-libp2p/blob/develop/LICENSE-APACHE"
+    },
+    {
+      "moduleName": "io.vertx",
+      "moduleLicense": "Apache License, Version 2.0"
+    },
+    {
+      "moduleName": "jakarta.activation:jakarta.activation-api",
+      "moduleLicense": "Eclipse Distribution License - v 1.0"
+    },
+    {
+      "moduleName": "jakarta.validation:jakarta.validation-api",
+      "moduleLicense": "Eclipse Distribution License - v 1.0"
+    },
+    {
+      "moduleName": "jakarta.xml.bind:jakarta.xml.bind-api",
+      "moduleLicense": "Eclipse Distribution License - v 1.0"
+    },
+    {
+      "moduleName": "javax.persistence:javax.persistence-api",
+      "moduleLicense": "Eclipse Distribution License - v 1.0"
+    },
+    {
+      "moduleName": "javax.xml.bind:jaxb-api",
+      "moduleLicense": "COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.1"
+    },
+    {
+      "moduleName": "net.java.dev.jna:jna-jpms",
+      "moduleLicense": "Apache License, Version 2.0"
+    },
+    {
+      "moduleName": "net.java.dev.jna:jna-platform-jpms",
+      "moduleLicense": "Apache License, Version 2.0"
+    },
+    {
+      "moduleName": "org.codehaus.mojo:animal-sniffer-annotations",
+      "moduleLicense": "Apache License, Version 2.0"
+    },
+    {
+      "moduleName": "org.codehaus.woodstox:stax2-api",
+      "moduleLicense": "Apache License, Version 2.0"
+    },
+    {
+      "moduleName": "org.eclipse.jetty",
+      "moduleLicense": "Apache License, Version 2.0"
+    },
+    {
+      "moduleName": "org.eclipse.jetty.websocket",
+      "moduleLicense": "Apache License, Version 2.0"
+    },
+    {
+      "moduleName": "org.fusesource.hawtjni:hawtjni-runtime",
+      "moduleLicense": "Apache License, Version 2.0"
+    },
+    {
+      "moduleName": "org.fusesource.leveldbjni:leveldbjni",
+      "moduleLicense": "Apache License, Version 2.0"
+    },
+    {
+      "moduleName": "org.fusesource.leveldbjni:leveldbjni-win32",
+      "moduleLicense": "Apache License, Version 2.0"
+    },
+    {
+      "moduleName": "org.fusesource.leveldbjni:leveldbjni-win64",
+      "moduleLicense": "Apache License, Version 2.0"
+    },
+    {
+      "moduleName": "org.hdrhistogram:HdrHistogram",
+      "moduleLicense": "The 2-Clause BSD License"
+    },
+    {
+      "moduleName": "org.javassist:javassist",
+      "moduleLicense": "Apache License, Version 2.0"
+    },
+    {
+      "moduleName": "org.java-websocket:Java-WebSocket",
+      "moduleLicense": "MIT License"
+    },
+    {
+      "moduleName": "org.ow2.asm",
+      "moduleLicense": "Apache License, Version 2.0"
+    },
+    {
+      "moduleName": "org.rocksdb:rocksdbjni",
+      "moduleLicense": "Apache License, Version 2.0"
+    },
+    {
+      "moduleName": "tech.pegasys:noise-java",
+      "moduleLicense": "Apache License, Version 2.0"
+    },
+    {
+      "moduleName": "com.squareup.okio:okio",
+      "moduleLicense": "Apache License, Version 2.0",
+      "moduleLicenseUrl": "https://github.com/square/okio/blob/master/LICENSE.txt"
+    },
+    {
+      "moduleName": "org.eclipse.jetty.toolchain:jetty-jakarta-servlet-api",
+      "moduleLicense": "Apache License, Version 2.0"
+    },
+    {
+      "moduleName": "net.java.dev.jna:jna-platform",
+      "moduleLicense": "Apache License, Version 2.0"
+    },
+    {
+      "moduleName": "net.java.dev.jna:jna",
+      "moduleLicense": "Apache License, Version 2.0"
+    },
+    {
+      "moduleName": "jakarta.transaction:jakarta.transaction-api",
+      "moduleLicense": "Eclipse Public License - v 2.0"
+    },
+    {
+      "moduleName": "jakarta.annotation:jakarta.annotation-api",
+      "moduleLicense": "Eclipse Public License - v 2.0"
+    },
+    {
+      "moduleName": "com.google.guava:guava-parent",
+      "moduleLicense": "Apache License, Version 2.0"
+    }
+  ]
+}
+

@@ -1,5 +1,5 @@
 # Forky
-This is the GitHub repository for ICSE'25 paper: 
+This is the GitHub repository for ICSE'25 paper [[paper link]](https://doi.ieeecomputersociety.org/10.1109/ICSE55347.2025.00085): 
 
 > *Fork State-Aware Differential Fuzzing for Blockchain Consensus Implementations*
 
@@ -33,5 +33,7 @@ We test Forky on the two most influential blockchain projects: *Bitcoin* and *Et
   booktitle = {Proceedings of the 47th IEEE/ACM International Conference on Software Engineering (ICSE'25)},
   year = {2025},
   location = {Ottawa, Ontario, Canada},
+  doi = {10.1109/ICSE55347.2025.00085},
+  pages = {622-622},
 }
 ```

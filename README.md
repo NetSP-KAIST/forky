@@ -28,12 +28,15 @@ We test Forky on the two most influential blockchain projects: *Bitcoin* and *Et
 ### Citation
 ```
 @inproceedings{kim2025fork,
-  title = {Fork State-Aware Differential Fuzzing for Blockchain Consensus Implementations},
+  title = {{Fork State-Aware Differential Fuzzing for Blockchain Consensus Implementations}},
   author = {Wonhoi Kim and Hocheol Nam and Muoi Tran and Amin Jalilov and Zhenkai Liang and Sang Kil Cha and Min Suk Kang},
   booktitle = {Proceedings of the 47th IEEE/ACM International Conference on Software Engineering (ICSE'25)},
   year = {2025},
   location = {Ottawa, Ontario, Canada},
   doi = {10.1109/ICSE55347.2025.00085},
   pages = {622-622},
+  publisher = {IEEE Computer Society},
+  address = {Los Alamitos, CA, USA},
+  month = May
 }
 ```

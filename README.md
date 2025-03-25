@@ -1,4 +1,6 @@
 # Forky
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14641017.svg)](https://doi.org/10.5281/zenodo.14641017)
+
 This is the GitHub repository for ICSE'25 paper [[paper link]](https://doi.ieeecomputersociety.org/10.1109/ICSE55347.2025.00085): 
 
 > *Fork State-Aware Differential Fuzzing for Blockchain Consensus Implementations*
@@ -7,7 +9,7 @@ Forky is a fork state-aware differential fuzzing framework designed to detect im
 We test Forky on the two most influential blockchain projects: *Bitcoin* and *Ethereum*, which are the representatives of the two major blockchain consensus algorithm families, Proof-of-Work (PoW) and Proof-of-Stake (PoS) consensus algorithms.
 
 > [!NOTE]
-> The current version is Proof-of-Concept implementation, so not optimized yet.
+> The current version is a Proof-of-Concept implementation, so it is not optimized yet.
 
 > [!WARNING]
 > Current PoC implementation utilizes a large amount of disk I/O that can impact SSD lifespan.

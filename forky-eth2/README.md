@@ -108,7 +108,6 @@ cd ../..
 
 # Results can be found in forky-eth2/teku-23.6.2/eth-reference-tests/build/reports/tests/referenceTest
 
-
 # If fail due to too many test cases (e.g., JVM heap space is exhausted), please do this at the last of validation (After finishing executing other clients)
 ./split_teku_testcases.sh
 ./splitted_generate_teku.sh
